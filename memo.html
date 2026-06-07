@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0"/>
+<title>memo ✦</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+:root{--bg:#f7f6f3;--card:#fff;--text:#222;--t2:#888;--t3:#bbb;--t4:#e2e0dc;--accent:#222;--r:8px;--danger:#c44}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;display:flex;flex-direction:column}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+
+.top{padding:28px 28px 0;flex-shrink:0}
+.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.logo{font-size:18px;font-weight:700;letter-spacing:-0.3px;display:flex;align-items:center;gap:6px}
+.logo-mark{width:6px;height:6px;border-radius:50%;background:var(--text)}
+.add-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:9px 20px;border-radius:20px;
+  background:var(--text);color:#fff;
+  border:none;font-family:inherit;font-size:12px;font-weight:600;
+  cursor:pointer;transition:.15s;
+}
+.add-btn:hover{opacity:.8}
+
+.search{width:100%;padding:10px 0;border:none;border-bottom:1px solid var(--t4);background:transparent;font-family:inherit;font-size:13px;color:var(--text);outline:none;margin-bottom:14px}
+.search::placeholder{color:var(--t3)}
+
+.cats{display:flex;gap:4px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--t4);margin-bottom:0}
+.cat-chip{padding:5px 14px;border-radius:14px;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;transition:.12s;background:transparent;border:none;font-family:inherit}
+.cat-chip:hover{color:var(--text);background:rgba(0,0,0,0.03)}
+.cat-chip.active{color:#fff;background:var(--text)}
+.cat-chip.add{color:var(--t3)}
+.cat-chip.add:hover{color:var(--text)}
+
+.grid-wrap{flex:1;overflow-y:auto;padding:18px 28px 60px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;align-content:start}
+
+.note{
+  background:var(--card);border-radius:var(--r);
+  padding:20px 18px 16px;cursor:pointer;
+  transition:.2s;position:relative;min-height:140px;
+  display:flex;flex-direction:column;
+  box-shadow:0 1px 2px rgba(0,0,0,0.04);
+}
+.note:hover{box-shadow:0 8px 24px rgba(0,0,0,0.07);transform:translateY(-2px)}
+.note-cat{font-size:10px;font-weight:600;color:var(--t2);letter-spacing:0.3px;margin-bottom:8px}
+.note-title{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.note-body{font-size:12px;color:var(--t2);line-height:1.8;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;flex:1;word-break:break-word;white-space:pre-wrap}
+.note-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
+.note-time{font-size:10px;color:var(--t3)}
+.note-del{background:none;border:none;cursor:pointer;font-size:13px;color:transparent;padding:4px;transition:.15s}
+.note:hover .note-del{color:var(--t3)}
+.note-del:hover{color:var(--danger)!important}
+
+.empty{grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--t3);font-size:13px;font-weight:300}
+
+/* ── View Modal ── */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.18);backdrop-filter:blur(6px);z-index:100;align-items:center;justify-content:center;padding:20px}
+.modal-bg.show{display:flex}
+.modal{background:#fff;border-radius:12px;width:100%;max-width:520px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.12);overflow:hidden}
+.modal-head{display:flex;align-items:center;gap:8px;padding:16px 20px;border-bottom:1px solid #f0efec;flex-shrink:0}
+.modal-cat{font-size:11px;font-weight:600;color:var(--t2);padding:3px 10px;background:#f4f3f0;border-radius:10px}
+.modal-head-right{margin-left:auto;display:flex;gap:6px}
+.modal-btn{background:none;border:1px solid var(--t4);border-radius:6px;padding:6px 14px;font-family:inherit;font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;transition:.12s}
+.modal-btn:hover{border-color:var(--text);color:var(--text)}
+.modal-btn.primary{background:var(--text);color:#fff;border-color:var(--text)}
+.modal-btn.primary:hover{opacity:.8}
+.modal-close{background:none;border:none;cursor:pointer;font-size:18px;color:var(--t3);padding:2px 4px}
+.modal-close:hover{color:var(--text)}
+.modal-body{flex:1;overflow-y:auto;padding:20px}
+.modal-title{font-size:20px;font-weight:700;line-height:1.4;margin-bottom:14px;word-break:break-word}
+.modal-content{font-size:14px;line-height:2;color:#444;white-space:pre-wrap;word-break:break-word}
+.modal-time{font-size:11px;color:var(--t3);margin-top:20px;padding-top:14px;border-top:1px solid #f0efec}
+
+/* Edit mode */
+.modal.editing .modal-title,.modal.editing .modal-content{display:none}
+.modal .ed-title,.modal .ed-body,.modal .ed-cat-sel{display:none}
+.modal.editing .ed-title,.modal.editing .ed-body,.modal.editing .ed-cat-sel{display:block}
+.ed-title{border:none;outline:none;font-family:inherit;font-size:20px;font-weight:700;color:var(--text);width:100%;padding-bottom:12px;border-bottom:1px solid #f0efec;margin-bottom:14px}
+.ed-title::placeholder{color:var(--t3)}
+.ed-body{border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text);width:100%;min-height:200px;resize:none;line-height:2}
+.ed-body::placeholder{color:var(--t3)}
+.ed-cat-sel{margin-bottom:12px}
+.ed-cat-sel select{padding:5px 10px;border:1px solid var(--t4);border-radius:6px;font-family:inherit;font-size:12px;color:var(--t2);outline:none;background:#fff}
+
+/* Cat modal */
+.cm-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.15);z-index:200;align-items:center;justify-content:center}
+.cm-bg.show{display:flex}
+.cm-box{background:#fff;border-radius:10px;padding:22px;max-width:280px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,0.1)}
+.cm-box h3{font-size:14px;font-weight:700;margin-bottom:14px}
+.cm-box input{width:100%;padding:9px 12px;border:1px solid #eee;border-radius:6px;font-family:inherit;font-size:13px;outline:none;margin-bottom:14px}
+.cm-box input:focus{border-color:var(--text)}
+.cm-btns{display:flex;gap:8px;justify-content:flex-end}
+.cm-btns button{padding:8px 18px;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border:none}
+.cm-cancel{background:#f4f3f0;color:var(--t2)}
+.cm-ok{background:var(--text);color:#fff}
+.cm-ok:hover{opacity:.8}
+.cm-del{background:none;border:none;color:var(--danger);font-size:11px;cursor:pointer;margin-right:auto;font-family:inherit}
+
+/* Confirm */
+.cf-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.15);z-index:300;align-items:center;justify-content:center}
+.cf-bg.show{display:flex}
+.cf-box{background:#fff;border-radius:10px;padding:24px;max-width:280px;width:90%;text-align:center}
+.cf-box p{font-size:14px;font-weight:600;margin-bottom:18px}
+.cf-btns{display:flex;gap:10px;justify-content:center}
+.cf-btns button{padding:9px 22px;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border:none}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:#fff;padding:10px 22px;border-radius:6px;font-size:12px;font-weight:500;transition:.3s;opacity:0;z-index:400;pointer-events:none}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+
+@media(max-width:600px){
+  .top{padding:20px 18px 0}
+  .grid-wrap{padding:14px 18px 50px}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
+  .note{min-height:110px;padding:16px 14px 12px}
+  .modal{max-height:90vh;border-radius:10px}
+}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="top-row">
+    <div class="logo"><div class="logo-mark"></div>memo</div>
+    <button class="add-btn" onclick="newMemo()">+ 새 메모</button>
+  </div>
+  <input class="search" id="search" placeholder="메모 검색" oninput="render()"/>
+  <div class="cats" id="cats"></div>
+</div>
+<div class="grid-wrap"><div class="grid" id="grid"></div></div>
+
+<!-- View/Edit Modal -->
+<div class="modal-bg" id="mbg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modal">
+    <div class="modal-head">
+      <span class="modal-cat" id="m-cat"></span>
+      <div class="modal-head-right">
+        <button class="modal-btn" id="m-edit-btn" onclick="toggleEdit()">수정</button>
+        <button class="modal-btn primary" id="m-save-btn" onclick="saveEdit()" style="display:none">저장</button>
+        <button class="modal-close" onclick="closeModal()">✕</button>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="ed-cat-sel"><select id="m-cat-sel"></select></div>
+      <div class="modal-title" id="m-title"></div>
+      <input class="ed-title" id="m-ed-title" placeholder="제목"/>
+      <div class="modal-content" id="m-body"></div>
+      <textarea class="ed-body" id="m-ed-body" placeholder="내용"></textarea>
+      <div class="modal-time" id="m-time"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Cat Modal -->
+<div class="cm-bg" id="cm-bg">
+  <div class="cm-box">
+    <h3 id="cm-h">카테고리</h3>
+    <input id="cm-name" placeholder="이름"/>
+    <div class="cm-btns">
+      <button class="cm-del" id="cm-del" onclick="delCat()" style="display:none">삭제</button>
+      <button class="cm-cancel" onclick="closeCm()">취소</button>
+      <button class="cm-ok" onclick="saveCat()">저장</button>
+    </div>
+  </div>
+</div>
+
+<div class="cf-bg" id="cf-bg">
+  <div class="cf-box"><p>삭제할까요?</p>
+    <div class="cf-btns"><button class="cm-cancel" onclick="closeCf()">취소</button><button class="cm-ok" style="background:var(--danger)" id="cf-ok">삭제</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const SK='memo_v4';
+let D={m:[],c:[]},cur='all',vid=null,editing=false,ecid=null,did=null;
+
+function load(){try{D=JSON.parse(localStorage.getItem(SK)||'{}');if(!D.m)D.m=[];if(!D.c)D.c=[];}catch{D={m:[],c:[]}}}
+function save(){localStorage.setItem(SK,JSON.stringify(D))}
+
+function renderCats(){
+  const el=$('cats');el.innerHTML='';
+  btn('cat-chip'+(cur==='all'?' active':''),'전체',()=>{cur='all';renderCats();render()},el);
+  D.c.forEach(c=>{
+    const b=btn('cat-chip'+(cur===c.id?' active':''),c.name,()=>{cur=c.id;renderCats();render()},el);
+    b.oncontextmenu=e=>{e.preventDefault();openCm(c)};
+  });
+  btn('cat-chip add','+',()=>openCm(),el);
+}
+
+function render(){
+  const g=$('grid'),q=$('search').value.trim().toLowerCase();
+  let list=[...D.m];
+  if(cur!=='all')list=list.filter(x=>x.cat===cur);
+  if(q)list=list.filter(x=>(x.t+x.b).toLowerCase().includes(q));
+  list.sort((a,b)=>b.u-a.u);
+  if(!list.length){g.innerHTML='<div class="empty">'+(q?'검색 결과가 없어요':'메모를 추가해보세요')+'</div>';return}
+  g.innerHTML='';
+  list.forEach(m=>{
+    const cat=D.c.find(c=>c.id===m.cat);
+    const n=mk('div','note');n.onclick=()=>openModal(m.id);
+    n.innerHTML=(cat?'<div class="note-cat">'+esc(cat.name)+'</div>':'')
+      +'<div class="note-title">'+esc(m.t||'제목 없음')+'</div>'
+      +'<div class="note-body">'+esc(m.b||'')+'</div>'
+      +'<div class="note-foot"><span class="note-time">'+fmt(m.u)+'</span>'
+      +'<button class="note-del" onclick="event.stopPropagation();cfDel(\''+m.id+'\')">✕</button></div>';
+    g.appendChild(n);
+  });
+}
+
+function newMemo(){
+  const cat=cur==='all'?(D.c[0]?.id||''):cur;
+  const m={id:uid(),t:'',b:'',cat,u:Date.now()};
+  D.m.unshift(m);save();render();renderCats();
+  openModal(m.id);toggleEdit();
+  toast('새 메모');
+}
+
+// ── Modal (View / Edit) ──
+function openModal(id){
+  vid=id;editing=false;
+  const m=D.m.find(x=>x.id===id);if(!m)return;
+  const cat=D.c.find(c=>c.id===m.cat);
+  $('m-cat').textContent=cat?cat.name:'미분류';
+  $('m-title').textContent=m.t||'제목 없음';
+  $('m-body').textContent=m.b||'내용 없음';
+  $('m-time').textContent=fullDate(m.u);
+  $('m-ed-title').value=m.t;
+  $('m-ed-body').value=m.b;
+  // cat select
+  const sel=$('m-cat-sel');sel.innerHTML='<option value="">미분류</option>';
+  D.c.forEach(c=>{const o=mk('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o)});
+  sel.value=m.cat||'';
+  $('modal').classList.remove('editing');
+  $('m-edit-btn').style.display='';
+  $('m-save-btn').style.display='none';
+  $('mbg').classList.add('show');
+}
+function closeModal(){$('mbg').classList.remove('show');vid=null;editing=false}
+function toggleEdit(){
+  editing=true;
+  $('modal').classList.add('editing');
+  $('m-edit-btn').style.display='none';
+  $('m-save-btn').style.display='';
+  setTimeout(()=>$('m-ed-title').focus(),80);
+}
+function saveEdit(){
+  if(!vid)return;
+  const m=D.m.find(x=>x.id===vid);if(!m)return;
+  m.t=$('m-ed-title').value;
+  m.b=$('m-ed-body').value;
+  m.cat=$('m-cat-sel').value;
+  m.u=Date.now();
+  save();render();renderCats();
+  closeModal();
+  toast('저장됨');
+}
+
+// ── Delete ──
+function cfDel(id){did=id;$('cf-bg').classList.add('show')}
+function closeCf(){$('cf-bg').classList.remove('show');did=null}
+$('cf-ok').onclick=()=>{if(did){D.m=D.m.filter(x=>x.id!==did);save();render();renderCats();toast('삭제됨')}closeCf()};
+
+// ── Cat ──
+function openCm(ex){
+  ecid=ex?ex.id:null;
+  $('cm-h').textContent=ex?'카테고리 수정':'카테고리 추가';
+  $('cm-name').value=ex?ex.name:'';
+  $('cm-del').style.display=ex?'block':'none';
+  $('cm-bg').classList.add('show');
+  setTimeout(()=>$('cm-name').focus(),80);
+}
+function closeCm(){$('cm-bg').classList.remove('show');ecid=null}
+function saveCat(){
+  const name=$('cm-name').value.trim();if(!name)return;
+  if(ecid){const c=D.c.find(x=>x.id===ecid);if(c)c.name=name}
+  else D.c.push({id:uid(),name});
+  save();renderCats();render();closeCm();toast(ecid?'수정됨':'추가됨');
+}
+function delCat(){
+  if(!ecid)return;D.c=D.c.filter(x=>x.id!==ecid);
+  D.m.forEach(x=>{if(x.cat===ecid)x.cat=''});
+  if(cur===ecid)cur='all';
+  save();renderCats();render();closeCm();toast('삭제됨');
+}
+
+function $(id){return document.getElementById(id)}
+function mk(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e}
+function btn(cls,txt,fn,parent){const b=mk('button',cls);b.textContent=txt;b.onclick=fn;parent.appendChild(b);return b}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+function fmt(t){const d=Date.now()-t;if(d<6e4)return'방금';if(d<3.6e6)return Math.floor(d/6e4)+'분 전';if(d<8.64e7)return Math.floor(d/3.6e6)+'시간 전';const o=new Date(t);return(o.getMonth()+1)+'.'+o.getDate()}
+function fullDate(t){const d=new Date(t);return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
+function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(editing){closeModal()}else if($('mbg').classList.contains('show'))closeModal();else if($('cm-bg').classList.contains('show'))closeCm()}});
+
+load();renderCats();render();
+</script>
+</body>
+</html>
