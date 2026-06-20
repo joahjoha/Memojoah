@@ -1294,11 +1294,11 @@ function applyCensor(){
           // 👉 [추가] 앞뒤 글자 직전까지 빈 공간을 꽉 채워 삐져나온 꼬리 덮기
           const _nx = chars[idx+sw.length];
           if (_nx && _nx.sym && _nx.sym.bbox && _nx.sym.bbox.x0 > x1 && _nx.sym.bbox.x0 - x1 < medH) {
-              x1 = _nx.sym.bbox.x0 - 1; // 다음 글자 1px 앞까지 쫙 늘림
+              x1 = _nx.sym.bbox.x0 - 5; // 다음 글자 1px 앞까지 쫙 늘림
           }
           const _pr = idx > 0 ? chars[idx-1] : null;
           if (_pr && _pr.sym && _pr.sym.bbox && _pr.sym.bbox.x1 < x0 && x0 - _pr.sym.bbox.x1 < medH) {
-              x0 = _pr.sym.bbox.x1 + 1; // 앞 글자 1px 뒤까지 쫙 늘림
+              x0 = _pr.sym.bbox.x1 + 4; // 앞 글자 1px 뒤까지 쫙 늘림
           } 
           
           drawCensor(ctx,canvas,x0,by0,x1-x0,fixedH,lbl);
@@ -1396,11 +1396,11 @@ function applyCensor(){
               // 👉 [추가] 폴백 로직에서도 빈 공간 꽉 채우기
               const _nx2 = map[idx+sw.length];
               if (_nx2 && _nx2.sym && _nx2.sym.bbox && Math.abs((_nx2.sym.bbox.y0+_nx2.sym.bbox.y1)/2 - cy) < fixedH*0.6) {
-                  if(_nx2.sym.bbox.x0 > x1 && _nx2.sym.bbox.x0 - x1 < medH) x1 = _nx2.sym.bbox.x0 - 1;
+                  if(_nx2.sym.bbox.x0 > x1 && _nx2.sym.bbox.x0 - x1 < medH) x1 = _nx2.sym.bbox.x0 - 5;
               }
               const _pr2 = idx > 0 ? map[idx-1] : null;
               if (_pr2 && _pr2.sym && _pr2.sym.bbox && Math.abs((_pr2.sym.bbox.y0+_pr2.sym.bbox.y1)/2 - cy) < fixedH*0.6) {
-                  if(_pr2.sym.bbox.x1 < x0 && x0 - _pr2.sym.bbox.x1 < medH) x0 = _pr2.sym.bbox.x1 + 1;
+                  if(_pr2.sym.bbox.x1 < x0 && x0 - _pr2.sym.bbox.x1 < medH) x0 = _pr2.sym.bbox.x1 + 4;
               }
 
               drawCensor(ctx,canvas,x0,by0,x1-x0,fixedH,lbl);
