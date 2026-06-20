@@ -2,303 +2,2263 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0"/>
-<title>memo ✦</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>cover</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
-:root{--bg:#f7f6f3;--card:#fff;--text:#222;--t2:#888;--t3:#bbb;--t4:#e2e0dc;--accent:#222;--r:8px;--danger:#c44}
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
-body{font-family:'IBM Plex Sans KR',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.6;display:flex;flex-direction:column}
-::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#ccc;border-radius:3px}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f5f4;
+  --surface:#ffffff;
+  --border:#e7e5e4;
+  --text:#1c1917;
+  --muted:#a8a29e;
+  --accent:#1c1917;
+  --r:10px;
+}
+html,body{
+  min-height:100%;
+  font-family:'Inter','Noto Sans KR',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:14px;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:560px;margin:0 auto;padding:48px 24px 80px}
 
-.top{padding:28px 28px 0;flex-shrink:0}
-.top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
-.logo{font-size:18px;font-weight:700;letter-spacing:-0.3px;display:flex;align-items:center;gap:6px}
-.logo-mark{width:6px;height:6px;border-radius:50%;background:var(--text)}
-.add-btn{
-  display:flex;align-items:center;gap:6px;
-  padding:9px 20px;border-radius:20px;
+/* header */
+.header{margin-bottom:24px}
+.logo{font-size:22px;font-weight:600;letter-spacing:-0.5px;color:var(--text)}
+.logo-sub{font-size:12px;color:var(--muted);margin-top:3px;font-weight:400}
+
+/* tabs */
+.tabs{display:flex;gap:0;margin-bottom:24px;border:1.5px solid var(--border);border-radius:var(--r);overflow:hidden;background:var(--surface)}
+.tab{flex:1;padding:10px 4px;font-family:inherit;font-size:13px;font-weight:500;color:var(--muted);background:transparent;border:none;cursor:pointer;transition:.12s}
+.tab.active{background:var(--text);color:#fff}
+
+/* text tab */
+.text-panel{display:none;flex-direction:column;gap:0}
+.text-panel.show{display:flex}
+.replace-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.replace-arrow{font-size:14px;color:var(--muted);flex-shrink:0}
+.add-rule{background:transparent;border:1.5px dashed var(--border);border-radius:8px;padding:9px;font-family:inherit;font-size:12px;color:var(--muted);cursor:pointer;width:100%;margin-bottom:0;transition:.12s}
+.add-rule:hover{border-color:var(--muted);color:var(--text)}
+.del-rule{background:transparent;border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:0 2px;flex-shrink:0;line-height:1}
+.del-rule:hover{color:var(--text)}
+.textarea-field{width:100%;min-height:180px;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;line-height:1.65;resize:vertical;outline:none;background:var(--surface);color:var(--text);transition:border-color .15s}
+.textarea-field:focus{border-color:var(--text)}
+.result-area{display:none;position:relative}
+.result-area.show{display:block}
+.result-text{width:100%;min-height:180px;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:15px;line-height:1.7;resize:none;outline:none;background:#fafaf9;color:var(--text)}
+.copy-btn{position:absolute;top:8px;right:8px;padding:5px 10px;border-radius:6px;border:1.5px solid var(--border);background:var(--surface);font-family:inherit;font-size:11px;font-weight:500;color:var(--muted);cursor:pointer;transition:.12s}
+.copy-btn:hover{border-color:var(--muted);color:var(--text)}
+.style-btn{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface);font-family:inherit;font-size:13px;font-weight:500;color:var(--muted);cursor:pointer;transition:.12s}
+.style-btn.active{background:var(--text);color:#fff;border-color:var(--text)}
+
+/* upload */
+.upload-area{
+  border:1.5px dashed var(--border);
+  border-radius:var(--r);
+  padding:48px 24px;
+  text-align:center;
+  cursor:pointer;
+  transition:border-color .15s, background .15s;
+  position:relative;
+  background:var(--surface);
+}
+.upload-area:hover{border-color:#a8a29e;background:#fafaf9}
+.upload-area input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.upload-icon{font-size:24px;display:block;margin-bottom:10px;opacity:.5}
+.upload-label{color:var(--muted);font-size:13px}
+.upload-hint{font-size:11px;color:#c4bfbb;margin-top:4px}
+
+/* preview */
+.preview-wrap{
+  display:none;margin-bottom:0;
+  border-radius:var(--r);overflow:hidden;
+  border:1.5px solid var(--border);
+  background:var(--surface);
+  position:relative;cursor:pointer;
+}
+.preview-wrap canvas{width:100%;height:auto;display:block}
+.pv-menu{
+  position:absolute;inset:0;background:rgba(0,0,0,.4);
+  display:none;align-items:center;justify-content:center;gap:10px;
+}
+.pv-menu.show{display:flex}
+.pv-btn{
+  padding:11px 18px;border-radius:10px;border:none;
+  background:#fff;color:var(--text);
+  font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;
+  box-shadow:0 2px 10px rgba(0,0,0,.2);
+}
+
+/* controls */
+.controls{display:none;flex-direction:column;gap:0}
+
+/* section */
+.section{
+  border:1.5px solid var(--border);
+  border-top:none;
+  background:var(--surface);
+  padding:20px;
+}
+.section:last-child{border-radius:0 0 var(--r) var(--r)}
+.section-title{font-size:11px;font-weight:500;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px}
+
+/* inputs */
+.word-row{display:flex;gap:10px}
+.input-wrap{flex:1;position:relative}
+.input-tag{
+  position:absolute;left:12px;top:50%;transform:translateY(-50%);
+  font-size:10px;font-weight:500;color:var(--muted);pointer-events:none;
+  background:var(--surface);padding:0 2px;
+}
+.input-field{
+  width:100%;padding:10px 12px;
+  border:1.5px solid var(--border);border-radius:8px;
+  font-family:inherit;font-size:13px;outline:none;
+  background:var(--surface);color:var(--text);
+  transition:border-color .15s;
+}
+.input-field:focus{border-color:var(--text)}
+.input-field::placeholder{color:#d4cfc9}
+
+/* auto-filter checkbox */
+.auto-row{display:flex;align-items:center;gap:8px;margin-top:12px;cursor:pointer;user-select:none}
+.auto-check{
+  width:18px;height:18px;border-radius:5px;
+  border:1.5px solid var(--border);background:var(--surface);
+  flex-shrink:0;display:flex;align-items:center;justify-content:center;
+  transition:.12s;
+}
+.auto-check.on{background:var(--text);border-color:var(--text)}
+.auto-check.on::after{content:'✓';color:#fff;font-size:12px;line-height:1}
+.auto-label{font-size:13px;color:var(--text)}
+.auto-sub{font-size:11px;color:var(--muted);margin-top:2px}
+
+/* style picker */
+.style-row{display:flex;gap:6px}
+.style-opt{
+  flex:1;padding:10px 4px;
+  border-radius:8px;border:1.5px solid var(--border);
+  display:flex;flex-direction:column;align-items:center;gap:5px;
+  cursor:pointer;transition:border-color .12s,background .12s;
+  background:var(--surface);font-size:11px;font-weight:500;
+  color:var(--muted);text-align:center;user-select:none
+}
+.style-opt:hover{border-color:#a8a29e}
+.style-opt.active{border-color:var(--text);color:var(--text)}
+.swatch{width:20px;height:12px;border-radius:3px}
+.swatch-black{background:#1c1917}
+.swatch-white{background:#fff;border:1.5px solid #e7e5e4}
+.swatch-mosaic{background:repeating-conic-gradient(#aaa 0% 25%,#ddd 0% 50%) 0 0/6px 6px}
+.swatch-emoji{font-size:14px;line-height:1}
+
+/* emoji picker */
+.emoji-section{display:none;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+.emoji-section.show{display:block}
+.emoji-grid{display:flex;flex-wrap:wrap;gap:4px}
+.emoji-opt{
+  width:36px;height:36px;border-radius:6px;
+  border:1.5px solid transparent;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;cursor:pointer;transition:.1s;
+}
+.emoji-opt:hover{background:#f5f5f4}
+.emoji-opt.active{border-color:var(--text);background:#f5f5f4}
+
+/* progress */
+.progress{display:none;align-items:center;gap:10px;margin-bottom:14px}
+.progress.show{display:flex}
+.progress-bar{flex:1;height:2px;background:var(--border);border-radius:1px;overflow:hidden}
+.progress-fill{height:100%;background:var(--text);border-radius:1px;transition:width .3s;width:0}
+.progress-text{font-size:11px;color:var(--muted);min-width:36px;text-align:right}
+
+/* found */
+.found{display:none;font-size:12px;color:var(--muted);margin-bottom:14px}
+.found.show{display:block}
+.found b{color:var(--text);font-weight:500}
+
+/* buttons */
+.btn-row{display:flex;gap:8px}
+.btn{
+  padding:9px 18px;border-radius:8px;border:none;
+  font-family:inherit;font-size:13px;font-weight:500;
+  cursor:pointer;transition:.12s;
+}
+.btn:active{opacity:.7}
+.btn-scan{background:var(--text);color:#fff}
+.btn-scan:hover{opacity:.85}
+.btn-scan:disabled{opacity:.4;cursor:default}
+.btn-download{background:var(--surface);color:var(--text);border:1.5px solid var(--border)}
+.btn-download:hover{border-color:var(--muted)}
+.btn-reset{background:transparent;color:var(--muted);border:1.5px solid var(--border)}
+.btn-reset:hover{color:var(--text);border-color:var(--muted)}
+
+/* loading */
+.loading-lib{
+  font-size:12px;color:var(--muted);
+  padding:8px 0;display:none;
+}
+.loading-lib.show{display:block}
+
+/* toast */
+.toast{
+  position:fixed;bottom:24px;left:50%;
+  transform:translateX(-50%) translateY(20px);
   background:var(--text);color:#fff;
-  border:none;font-family:inherit;font-size:12px;font-weight:600;
-  cursor:pointer;transition:.15s;
+  padding:8px 18px;border-radius:6px;
+  font-size:12px;font-weight:500;
+  transition:.2s;opacity:0;z-index:100;pointer-events:none;
+  white-space:nowrap;
 }
-.add-btn:hover{opacity:.8}
-
-.search{width:100%;padding:10px 0;border:none;border-bottom:1px solid var(--t4);background:transparent;font-family:inherit;font-size:13px;color:var(--text);outline:none;margin-bottom:14px}
-.search::placeholder{color:var(--t3)}
-
-.cats{display:flex;gap:4px;flex-wrap:wrap;padding-bottom:18px;border-bottom:1px solid var(--t4);margin-bottom:0}
-.cat-chip{padding:5px 14px;border-radius:14px;font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;transition:.12s;background:transparent;border:none;font-family:inherit}
-.cat-chip:hover{color:var(--text);background:rgba(0,0,0,0.03)}
-.cat-chip.active{color:#fff;background:var(--text)}
-.cat-chip.add{color:var(--t3)}
-.cat-chip.add:hover{color:var(--text)}
-
-.grid-wrap{flex:1;overflow-y:auto;padding:18px 28px 60px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;align-content:start}
-
-.note{
-  background:var(--card);border-radius:var(--r);
-  padding:20px 18px 16px;cursor:pointer;
-  transition:.2s;position:relative;min-height:140px;
-  display:flex;flex-direction:column;
-  box-shadow:0 1px 2px rgba(0,0,0,0.04);
-}
-.note:hover{box-shadow:0 8px 24px rgba(0,0,0,0.07);transform:translateY(-2px)}
-.note-cat{font-size:10px;font-weight:600;color:var(--t2);letter-spacing:0.3px;margin-bottom:8px}
-.note-title{font-size:15px;font-weight:700;line-height:1.4;margin-bottom:8px;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
-.note-body{font-size:12px;color:var(--t2);line-height:1.8;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;flex:1;word-break:break-word;white-space:pre-wrap}
-.note-foot{display:flex;align-items:center;justify-content:space-between;margin-top:12px}
-.note-time{font-size:10px;color:var(--t3)}
-.note-del{background:none;border:none;cursor:pointer;font-size:13px;color:transparent;padding:4px;transition:.15s}
-.note:hover .note-del{color:var(--t3)}
-.note-del:hover{color:var(--danger)!important}
-
-.empty{grid-column:1/-1;text-align:center;padding:80px 20px;color:var(--t3);font-size:13px;font-weight:300}
-
-/* ── View Modal ── */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.18);backdrop-filter:blur(6px);z-index:100;align-items:center;justify-content:center;padding:20px}
-.modal-bg.show{display:flex}
-.modal{background:#fff;border-radius:12px;width:100%;max-width:520px;max-height:80vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,0.12);overflow:hidden}
-.modal-head{display:flex;align-items:center;gap:8px;padding:16px 20px;border-bottom:1px solid #f0efec;flex-shrink:0}
-.modal-cat{font-size:11px;font-weight:600;color:var(--t2);padding:3px 10px;background:#f4f3f0;border-radius:10px}
-.modal-head-right{margin-left:auto;display:flex;gap:6px}
-.modal-btn{background:none;border:1px solid var(--t4);border-radius:6px;padding:6px 14px;font-family:inherit;font-size:11px;font-weight:600;color:var(--t2);cursor:pointer;transition:.12s}
-.modal-btn:hover{border-color:var(--text);color:var(--text)}
-.modal-btn.primary{background:var(--text);color:#fff;border-color:var(--text)}
-.modal-btn.primary:hover{opacity:.8}
-.modal-close{background:none;border:none;cursor:pointer;font-size:18px;color:var(--t3);padding:2px 4px}
-.modal-close:hover{color:var(--text)}
-.modal-body{flex:1;overflow-y:auto;padding:20px}
-.modal-title{font-size:20px;font-weight:700;line-height:1.4;margin-bottom:14px;word-break:break-word}
-.modal-content{font-size:14px;line-height:2;color:#444;white-space:pre-wrap;word-break:break-word}
-.modal-time{font-size:11px;color:var(--t3);margin-top:20px;padding-top:14px;border-top:1px solid #f0efec}
-
-/* Edit mode */
-.modal.editing .modal-title,.modal.editing .modal-content{display:none}
-.modal .ed-title,.modal .ed-body,.modal .ed-cat-sel{display:none}
-.modal.editing .ed-title,.modal.editing .ed-body,.modal.editing .ed-cat-sel{display:block}
-.ed-title{border:none;outline:none;font-family:inherit;font-size:20px;font-weight:700;color:var(--text);width:100%;padding-bottom:12px;border-bottom:1px solid #f0efec;margin-bottom:14px}
-.ed-title::placeholder{color:var(--t3)}
-.ed-body{border:none;outline:none;font-family:inherit;font-size:14px;color:var(--text);width:100%;min-height:200px;resize:none;line-height:2}
-.ed-body::placeholder{color:var(--t3)}
-.ed-cat-sel{margin-bottom:12px}
-.ed-cat-sel select{padding:5px 10px;border:1px solid var(--t4);border-radius:6px;font-family:inherit;font-size:12px;color:var(--t2);outline:none;background:#fff}
-
-/* Cat modal */
-.cm-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.15);z-index:200;align-items:center;justify-content:center}
-.cm-bg.show{display:flex}
-.cm-box{background:#fff;border-radius:10px;padding:22px;max-width:280px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,0.1)}
-.cm-box h3{font-size:14px;font-weight:700;margin-bottom:14px}
-.cm-box input{width:100%;padding:9px 12px;border:1px solid #eee;border-radius:6px;font-family:inherit;font-size:13px;outline:none;margin-bottom:14px}
-.cm-box input:focus{border-color:var(--text)}
-.cm-btns{display:flex;gap:8px;justify-content:flex-end}
-.cm-btns button{padding:8px 18px;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border:none}
-.cm-cancel{background:#f4f3f0;color:var(--t2)}
-.cm-ok{background:var(--text);color:#fff}
-.cm-ok:hover{opacity:.8}
-.cm-del{background:none;border:none;color:var(--danger);font-size:11px;cursor:pointer;margin-right:auto;font-family:inherit}
-
-/* Confirm */
-.cf-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.15);z-index:300;align-items:center;justify-content:center}
-.cf-bg.show{display:flex}
-.cf-box{background:#fff;border-radius:10px;padding:24px;max-width:280px;width:90%;text-align:center}
-.cf-box p{font-size:14px;font-weight:600;margin-bottom:18px}
-.cf-btns{display:flex;gap:10px;justify-content:center}
-.cf-btns button{padding:9px 22px;border-radius:6px;font-family:inherit;font-size:12px;font-weight:600;cursor:pointer;border:none}
-
-.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--text);color:#fff;padding:10px 22px;border-radius:6px;font-size:12px;font-weight:500;transition:.3s;opacity:0;z-index:400;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
-@media(max-width:600px){
-  .top{padding:20px 18px 0}
-  .grid-wrap{padding:14px 18px 50px}
-  .grid{grid-template-columns:repeat(auto-fill,minmax(155px,1fr));gap:12px}
-  .note{min-height:110px;padding:16px 14px 12px}
-  .modal{max-height:90vh;border-radius:10px}
-}
+.crop-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;align-items:center;justify-content:center}
+.crop-modal.show{display:flex}
+.crop-box{background:var(--surface);border-radius:14px;padding:14px 14px 16px;width:min(98vw,480px);max-height:93svh;display:flex;flex-direction:column;gap:10px;overflow:hidden}
+.crop-title{font-size:13px;font-weight:600;color:var(--text);flex-shrink:0}
+.crop-wrap{position:relative;border:1.5px solid var(--border);border-radius:8px;overflow-y:scroll;overflow-x:hidden;touch-action:pan-y;user-select:none;flex:1;min-height:0;-webkit-overflow-scrolling:touch}
+.crop-wrap img{display:block;max-width:100%;height:auto;max-height:calc(90svh - 130px);object-fit:contain;pointer-events:none}
+.crop-sel{position:absolute;border:2px solid #fff;box-shadow:0 0 0 9999px rgba(0,0,0,.4);box-sizing:border-box;cursor:move}
+.crop-handle{position:absolute;width:14px;height:14px;border-radius:50%;background:#fff;border:2px solid #555;box-sizing:border-box}
+.crop-handle[data-c=tl]{left:-7px;top:-7px;cursor:nw-resize}
+.crop-handle[data-c=tr]{right:-7px;top:-7px;cursor:ne-resize}
+.crop-handle[data-c=bl]{left:-7px;bottom:-7px;cursor:sw-resize}
+.crop-handle[data-c=br]{right:-7px;bottom:-7px;cursor:se-resize}
+.crop-btns{display:flex;gap:8px;justify-content:flex-end;flex-shrink:0}
+.bg-picker{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.bg-label{font-size:11px;color:var(--muted);font-weight:500;white-space:nowrap}
+.bg-opts{display:flex;gap:6px;flex-wrap:wrap}
+.bg-opt{width:28px;height:28px;border-radius:8px;border:1.5px solid var(--border);cursor:pointer;transition:.12s;flex-shrink:0}
+.bg-opt:hover{border-color:#a8a29e}
+.bg-opt.active{border-color:var(--text);box-shadow:0 0 0 2px var(--bg),0 0 0 3.5px var(--text)}
 </style>
 </head>
 <body>
+<div class="wrap">
 
-<div class="top">
-  <div class="top-row">
-    <div class="logo"><div class="logo-mark"></div>memo</div>
-    <button class="add-btn" onclick="newMemo()">+ 새 메모</button>
+  <div class="header">
+    <div class="logo">cover</div>
+    <div class="logo-sub">단어를 가리거나 바꿔줘요</div>
   </div>
-  <input class="search" id="search" placeholder="메모 검색" oninput="render()"/>
-  <div class="cats" id="cats"></div>
-</div>
-<div class="grid-wrap"><div class="grid" id="grid"></div></div>
 
-<!-- View/Edit Modal -->
-<div class="modal-bg" id="mbg" onclick="if(event.target===this)closeModal()">
-  <div class="modal" id="modal">
-    <div class="modal-head">
-      <span class="modal-cat" id="m-cat"></span>
-      <div class="modal-head-right">
-        <button class="modal-btn" id="m-edit-btn" onclick="toggleEdit()">수정</button>
-        <button class="modal-btn primary" id="m-save-btn" onclick="saveEdit()" style="display:none">저장</button>
-        <button class="modal-close" onclick="closeModal()">✕</button>
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('image',this)">이미지 가리기</button>
+    <button class="tab" onclick="switchTab('text',this)">텍스트 치환</button>
+  </div>
+
+  <div id="image-panel">
+  <div class="loading-lib" id="lib-loading">OCR 엔진 로딩 중...</div>
+
+  <div class="upload-area" id="upload-area" onclick="document.getElementById('file-input').click()">
+    <input type="file" accept="image/*" id="file-input" style="display:none" onchange="loadImage(this)"/>
+    <span class="upload-icon">↑</span>
+    <div class="upload-label">사진 선택</div>
+    <div class="upload-hint">탭해서 사진첩에서 가져오기</div>
+  </div>
+
+  <div class="preview-wrap" id="preview-wrap" onclick="togglePvMenu()">
+    <canvas id="canvas"></canvas>
+    <div class="pv-menu" id="pv-menu">
+      <button class="pv-btn" onclick="event.stopPropagation();hidePvMenu();openDraw()">✏️ 그리기</button>
+      <button class="pv-btn" onclick="event.stopPropagation();doReset()">🔄 다른 사진</button>
+    </div>
+  </div>
+
+  <div class="controls" id="controls">
+
+    <div class="section">
+      <div class="section-title">가릴 단어</div>
+      <div class="word-row">
+        <input class="input-field" type="text" id="word1" placeholder="단어 1"/>
+        <input class="input-field" type="text" id="word2" placeholder="단어 2 (선택)"/>
+      </div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start">
+        <div class="auto-row" onclick="toggleAuto()">
+          <div class="auto-check" id="auto-check"></div>
+          <div>
+            <div class="auto-label">야한 단어 자동 가리기</div>
+            <div class="auto-sub">입력 없이도 알아서</div>
+          </div>
+        </div>
+        <div class="auto-row" id="cute-row" style="display:none" onclick="toggleCute()">
+          <div class="auto-check" id="cute-check"></div>
+          <div>
+            <div class="auto-label">귀여운 말로</div>
+            <div class="auto-sub">~콩알~ 처럼 순화해서</div>
+          </div>
+        </div>
+        <div class="auto-row" onclick="toggleFuzzy()">
+          <div class="auto-check" id="fuzzy-check"></div>
+          <div>
+            <div class="auto-label">오타 보정</div>
+            <div class="auto-sub">받침 잘못 읽혀도 가리기</div>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="modal-body">
-      <div class="ed-cat-sel"><select id="m-cat-sel"></select></div>
-      <div class="modal-title" id="m-title"></div>
-      <input class="ed-title" id="m-ed-title" placeholder="제목"/>
-      <div class="modal-content" id="m-body"></div>
-      <textarea class="ed-body" id="m-ed-body" placeholder="내용"></textarea>
-      <div class="modal-time" id="m-time"></div>
+
+    <div class="section">
+      <div class="section-title">스타일</div>
+      <div class="style-row">
+        <div class="style-opt active" data-style="black" onclick="selectStyle('black',this)">
+          <div class="swatch swatch-black"></div>검정
+        </div>
+        <div class="style-opt" data-style="white" onclick="selectStyle('white',this)">
+          <div class="swatch swatch-white"></div>흰색
+        </div>
+        <div class="style-opt" data-style="mosaic" onclick="selectStyle('mosaic',this)">
+          <div class="swatch swatch-mosaic"></div>모자이크
+        </div>
+        <div class="style-opt" data-style="emoji" onclick="selectStyle('emoji',this)">
+          <div class="swatch-emoji">☺</div>이모지
+        </div>
+      </div>
+      <div class="emoji-section" id="emoji-section">
+        <div class="emoji-grid" id="emoji-pick"></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="progress" id="progress">
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+        <span class="progress-text" id="progress-text"></span>
+      </div>
+      <div class="found" id="found"></div>
+      <div class="btn-row">
+        <button class="btn btn-scan" id="scan-btn" onclick="doScan()">스캔</button>
+        <button class="btn btn-download" onclick="openCrop()" style="display:none" id="crop-btn">자르기</button>
+        <button class="btn btn-download" id="dl-btn" onclick="doDownload()" style="display:none">저장</button>
+      </div>
+    </div>
+
+  </div>
+  </div><!-- /image-panel -->
+
+  <div class="text-panel" id="text-panel">
+    <div class="section" style="border:1.5px solid var(--border);border-radius:var(--r) var(--r) 0 0">
+      <div class="section-title">치환 규칙</div>
+      <div id="rules-list"></div>
+      <button class="add-rule" onclick="addRule()">+ 규칙 추가</button>
+    </div>
+    <div class="section" style="border:1.5px solid var(--border);border-top:none">
+      <div class="section-title">원본 텍스트</div>
+      <textarea class="textarea-field" id="src-text" placeholder="여기에 텍스트를 붙여넣으세요"></textarea>
+    </div>
+    <div class="section" style="border:1.5px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r)">
+      <button class="btn btn-scan" onclick="openResult()" style="width:100%">치환하기</button>
+    </div>
+  </div>
+
+</div>
+<div class="crop-modal" id="result-modal">
+  <div class="crop-box">
+    <div class="result-text" id="result-text" style="flex:1;min-height:0;width:100%;padding:12px;border:1.5px solid var(--border);border-radius:8px;font-family:inherit;font-size:14px;line-height:1.7;overflow-y:auto;-webkit-overflow-scrolling:touch;background:#fafaf9;color:var(--text);white-space:pre-wrap;word-break:break-all;overflow-wrap:anywhere"></div>
+    <div class="bg-picker">
+      <span class="bg-label">배경</span>
+      <div class="bg-opts" id="bg-opts"></div>
+    </div>
+    <div class="crop-btns" style="display:flex;gap:8px">
+      <button class="btn btn-reset" onclick="document.getElementById('result-modal').classList.remove('show')" style="flex:1">닫기</button>
+      <button class="btn btn-scan" onclick="copyResult()" style="flex:1">복사</button>
+      <button class="btn btn-dl" onclick="textToImage()" style="flex:1;background:#fff;border:1.5px solid var(--border);color:var(--text)">이미지저장</button>
     </div>
   </div>
 </div>
-
-<!-- Cat Modal -->
-<div class="cm-bg" id="cm-bg">
-  <div class="cm-box">
-    <h3 id="cm-h">카테고리</h3>
-    <input id="cm-name" placeholder="이름"/>
-    <div class="cm-btns">
-      <button class="cm-del" id="cm-del" onclick="delCat()" style="display:none">삭제</button>
-      <button class="cm-cancel" onclick="closeCm()">취소</button>
-      <button class="cm-ok" onclick="saveCat()">저장</button>
+<div class="crop-modal" id="crop-modal">
+  <div class="crop-box">
+    <div class="crop-title">자르기</div>
+    <div class="crop-wrap" id="crop-wrap">
+      <img id="crop-img" src="" alt=""/>
+      <div class="crop-sel" id="crop-sel">
+        <div class="crop-handle" data-c="tl"></div>
+        <div class="crop-handle" data-c="tr"></div>
+        <div class="crop-handle" data-c="bl"></div>
+        <div class="crop-handle" data-c="br"></div>
+      </div>
+    </div>
+    <div class="crop-btns">
+      <button class="btn btn-reset" onclick="closeCrop()">취소</button>
+      <button class="btn btn-scan" onclick="applyCrop()">적용</button>
     </div>
   </div>
 </div>
-
-<div class="cf-bg" id="cf-bg">
-  <div class="cf-box"><p>삭제할까요?</p>
-    <div class="cf-btns"><button class="cm-cancel" onclick="closeCf()">취소</button><button class="cm-ok" style="background:var(--danger)" id="cf-ok">삭제</button></div>
+<div class="crop-modal" id="draw-modal">
+  <div class="crop-box">
+    <div class="crop-title">손으로 모자이크 — 한 손가락 칠하기 · 두 손가락 확대/이동</div>
+    <div id="draw-wrap" style="position:relative;overflow:hidden;border:1.5px solid var(--border);border-radius:8px;flex:1;min-height:200px;max-height:calc(90svh - 190px);touch-action:none;background:#1c1917;user-select:none">
+      <div id="draw-pan" style="transform-origin:0 0;will-change:transform">
+        <canvas id="draw-canvas" style="display:block;width:100%;pointer-events:none"></canvas>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <span class="bg-label">굵기</span>
+      <input type="range" id="brush-size" min="1" max="8" value="3" style="flex:1"/>
+      <button class="btn btn-reset" onclick="undoDraw()" style="padding:7px 12px">되돌리기</button>
+    </div>
+    <div class="crop-btns">
+      <button class="btn btn-reset" onclick="closeDraw()">취소</button>
+      <button class="btn btn-scan" onclick="applyDraw()">적용</button>
+    </div>
   </div>
 </div>
 <div class="toast" id="toast"></div>
 
 <script>
-const SK='memo_v4';
-let D={m:[],c:[]},cur='all',vid=null,editing=false,ecid=null,did=null;
-
-function load(){try{D=JSON.parse(localStorage.getItem(SK)||'{}');if(!D.m)D.m=[];if(!D.c)D.c=[];}catch{D={m:[],c:[]}}}
-function save(){localStorage.setItem(SK,JSON.stringify(D))}
-
-function renderCats(){
-  const el=$('cats');el.innerHTML='';
-  btn('cat-chip'+(cur==='all'?' active':''),'전체',()=>{cur='all';renderCats();render()},el);
-  D.c.forEach(c=>{
-    const b=btn('cat-chip'+(cur===c.id?' active':''),c.name,()=>{cur=c.id;renderCats();render()},el);
-    b.oncontextmenu=e=>{e.preventDefault();openCm(c)};
-  });
-  btn('cat-chip add','+',()=>openCm(),el);
+// ===== TABS =====
+function switchTab(tab, el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('image-panel').style.display = tab==='image' ? '' : 'none';
+  document.getElementById('text-panel').classList.toggle('show', tab==='text');
 }
 
-function render(){
-  const g=$('grid'),q=$('search').value.trim().toLowerCase();
-  let list=[...D.m];
-  if(cur!=='all')list=list.filter(x=>x.cat===cur);
-  if(q)list=list.filter(x=>(x.t+x.b).toLowerCase().includes(q));
-  list.sort((a,b)=>b.u-a.u);
-  if(!list.length){g.innerHTML='<div class="empty">'+(q?'검색 결과가 없어요':'메모를 추가해보세요')+'</div>';return}
-  g.innerHTML='';
-  list.forEach(m=>{
-    const cat=D.c.find(c=>c.id===m.cat);
-    const n=mk('div','note');n.onclick=()=>openModal(m.id);
-    n.innerHTML=(cat?'<div class="note-cat">'+esc(cat.name)+'</div>':'')
-      +'<div class="note-title">'+esc(m.t||'제목 없음')+'</div>'
-      +'<div class="note-body">'+esc(m.b||'')+'</div>'
-      +'<div class="note-foot"><span class="note-time">'+fmt(m.u)+'</span>'
-      +'<button class="note-del" onclick="event.stopPropagation();cfDel(\''+m.id+'\')">✕</button></div>';
-    g.appendChild(n);
+// ===== TEXT REPLACE =====
+let rules=[{from:'',to:'랙시'}];
+
+function renderRules(){
+  const list=document.getElementById('rules-list');
+  list.innerHTML='';
+  rules.forEach((r,i)=>{
+    const row=document.createElement('div');
+    row.className='replace-row';
+    row.innerHTML=`
+      <input class="input-field" style="flex:1" placeholder="찾을 단어" value="${r.from.replace(/"/g,'&quot;')}" oninput="rules[${i}].from=this.value;doReplace()"/>
+      <span class="replace-arrow">→</span>
+      <input class="input-field" style="flex:1" placeholder="바꿀 단어" value="${r.to.replace(/"/g,'&quot;')}" oninput="rules[${i}].to=this.value;doReplace()"/>
+      ${rules.length>1?`<button class="del-rule" onclick="delRule(${i})">×</button>`:'<span style="width:20px"></span>'}
+    `;
+    list.appendChild(row);
   });
 }
 
-function newMemo(){
-  const cat=cur==='all'?(D.c[0]?.id||''):cur;
-  const m={id:uid(),t:'',b:'',cat,u:Date.now()};
-  D.m.unshift(m);save();render();renderCats();
-  openModal(m.id);toggleEdit();
-  toast('새 메모');
+function addRule(){
+  rules.push({from:'',to:''});
+  renderRules();
+  // focus 새 from 인풋
+  const inputs=document.querySelectorAll('#rules-list .replace-row:last-child input');
+  if(inputs[0]) inputs[0].focus();
 }
 
-// ── Modal (View / Edit) ──
-function openModal(id){
-  vid=id;editing=false;
-  const m=D.m.find(x=>x.id===id);if(!m)return;
-  const cat=D.c.find(c=>c.id===m.cat);
-  $('m-cat').textContent=cat?cat.name:'미분류';
-  $('m-title').textContent=m.t||'제목 없음';
-  $('m-body').textContent=m.b||'내용 없음';
-  $('m-time').textContent=fullDate(m.u);
-  $('m-ed-title').value=m.t;
-  $('m-ed-body').value=m.b;
-  // cat select
-  const sel=$('m-cat-sel');sel.innerHTML='<option value="">미분류</option>';
-  D.c.forEach(c=>{const o=mk('option');o.value=c.id;o.textContent=c.name;sel.appendChild(o)});
-  sel.value=m.cat||'';
-  $('modal').classList.remove('editing');
-  $('m-edit-btn').style.display='';
-  $('m-save-btn').style.display='none';
-  $('mbg').classList.add('show');
-}
-function closeModal(){$('mbg').classList.remove('show');vid=null;editing=false}
-function toggleEdit(){
-  editing=true;
-  $('modal').classList.add('editing');
-  $('m-edit-btn').style.display='none';
-  $('m-save-btn').style.display='';
-  setTimeout(()=>$('m-ed-title').focus(),80);
-}
-function saveEdit(){
-  if(!vid)return;
-  const m=D.m.find(x=>x.id===vid);if(!m)return;
-  m.t=$('m-ed-title').value;
-  m.b=$('m-ed-body').value;
-  m.cat=$('m-cat-sel').value;
-  m.u=Date.now();
-  save();render();renderCats();
-  closeModal();
-  toast('저장됨');
+function delRule(i){
+  rules.splice(i,1);
+  renderRules();
+  doReplace();
 }
 
-// ── Delete ──
-function cfDel(id){did=id;$('cf-bg').classList.add('show')}
-function closeCf(){$('cf-bg').classList.remove('show');did=null}
-$('cf-ok').onclick=()=>{if(did){D.m=D.m.filter(x=>x.id!==did);save();render();renderCats();toast('삭제됨')}closeCf()};
-
-// ── Cat ──
-function openCm(ex){
-  ecid=ex?ex.id:null;
-  $('cm-h').textContent=ex?'카테고리 수정':'카테고리 추가';
-  $('cm-name').value=ex?ex.name:'';
-  $('cm-del').style.display=ex?'block':'none';
-  $('cm-bg').classList.add('show');
-  setTimeout(()=>$('cm-name').focus(),80);
-}
-function closeCm(){$('cm-bg').classList.remove('show');ecid=null}
-function saveCat(){
-  const name=$('cm-name').value.trim();if(!name)return;
-  if(ecid){const c=D.c.find(x=>x.id===ecid);if(c)c.name=name}
-  else D.c.push({id:uid(),name});
-  save();renderCats();render();closeCm();toast(ecid?'수정됨':'추가됨');
-}
-function delCat(){
-  if(!ecid)return;D.c=D.c.filter(x=>x.id!==ecid);
-  D.m.forEach(x=>{if(x.cat===ecid)x.cat=''});
-  if(cur===ecid)cur='all';
-  save();renderCats();render();closeCm();toast('삭제됨');
+function doReplace(){
+  const src=document.getElementById('src-text').value;
+  if(!src) return;
+  let result=src;
+  rules.forEach(r=>{
+    if(!r.from)return;
+    result=result.split(r.from).join(r.to);
+  });
+  return result;
 }
 
-function $(id){return document.getElementById(id)}
-function mk(tag,cls){const e=document.createElement(tag);if(cls)e.className=cls;return e}
-function btn(cls,txt,fn,parent){const b=mk('button',cls);b.textContent=txt;b.onclick=fn;parent.appendChild(b);return b}
-function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
-function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-function fmt(t){const d=Date.now()-t;if(d<6e4)return'방금';if(d<3.6e6)return Math.floor(d/6e4)+'분 전';if(d<8.64e7)return Math.floor(d/3.6e6)+'시간 전';const o=new Date(t);return(o.getMonth()+1)+'.'+o.getDate()}
-function fullDate(t){const d=new Date(t);return d.getFullYear()+'.'+String(d.getMonth()+1).padStart(2,'0')+'.'+String(d.getDate()).padStart(2,'0')+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')}
-function toast(m){const t=$('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),1800)}
+let _resultRaw=''; // 복사용 원본 텍스트 (마크다운 기호 포함)
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){if(editing){closeModal()}else if($('mbg').classList.contains('show'))closeModal();else if($('cm-bg').classList.contains('show'))closeCm()}});
+// 배경이 어두운지 판정 (텍스트/코드 색 자동 반전용)
+function isDarkBg(hex){
+  const m=/^#?([0-9a-f]{6})$/i.exec(hex||'');
+  if(!m)return false;
+  const n=parseInt(m[1],16);
+  const r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  return (0.299*r+0.587*g+0.114*b)<110;
+}
 
-load();renderCats();render();
+// **굵게**는 굵게, *한개*는 진회색, `코드`/```블록```은 고정폭으로 그대로.
+// HTML 주입 방지를 위해 먼저 escape 후 토큰만 태그로 치환. dark=어두운 배경용 색.
+function renderMarkup(text,dark){
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  // …(말줄임표)를 바닥 점 "..."으로 그린다(글꼴이 가운데 점으로 그리는 것 방지). 간격도 안 벌어지게 묶음.
+  const protectEllipsis=s=>s.replace(/[…⋯]+/g,m=>'<span style="letter-spacing:0">'+'.'.repeat(m.length*3)+'</span>');
+  const grayCol = dark?'#b8b2aa':'#6b6560';
+  const codeBg  = dark?'#3a3630':'#1c1917';
+  const codeFg  = '#f0ece6';
+  const codeHdr = dark?'#2e2a26':'#2a2520';
+  // 코드 토큰을 먼저 빼내 자리표시자로 보호 (코드 안의 ** 는 굵게 처리 안 함)
+  const codes=[];
+  let t=text.replace(/\n?```([\s\S]*?)```\n?/g,(m,c)=>{codes.push({block:true,c});return '\u0000C'+(codes.length-1)+'\u0000';})
+            .replace(/`([^`\n]+?)`/g,(m,c)=>{codes.push({block:false,c});return '\u0000C'+(codes.length-1)+'\u0000';});
+  t=esc(t);
+  t=protectEllipsis(t);
+  t=t.replace(/\*\*([^*]+?)\*\*/g,'<b>$1</b>'); // **굵게**
+  // > 인용구 → 왼쪽 회색 세로줄 블록
+  const quoteCol = dark?'#4a4540':'#ccc8c2';
+  const quoteFg  = dark?'#c8c2bc':'#6b6560';
+  t=t.replace(/(^|\n)&gt;\s?([^\n]*)/g,(m,pre,body)=>{
+    return '<span style="display:block;border-left:3px solid '+quoteCol+';padding:2px 0 2px 10px;margin:1px 0;color:'+quoteFg+'">'+body+'</span>';
+  });
+  // *한 개* → 진회색 (기울임 없음). 굵게(**)를 먼저 처리했으므로 남은 단독 * 만 매칭
+  t=t.replace(/\*([^*\n]+?)\*/g,'<span style="color:'+grayCol+'">$1</span>');
+  // 코드 자리표시자 복원
+  t=t.replace(/\u0000C(\d+)\u0000/g,(m,i)=>{
+    const it=codes[+i];
+    const inner=esc(it.block?it.c.trim():it.c);
+    if(it.block){
+      return '<div style="position:relative;background:'+codeBg+';border-radius:10px;margin:6px 0;overflow:hidden">'
+        +'<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 12px 6px;border-bottom:1px solid '+codeHdr+'">'
+        +'<span style="font-size:10px;font-weight:600;letter-spacing:1px;color:#7a736d;text-transform:uppercase;font-family:inherit">INFO</span>'
+        +'<button onclick="(function(){var txt=this.closest(\'div\').querySelector(\'code\').innerText;navigator.clipboard.writeText(txt).catch(()=>{});var el=this;el.textContent=\'✓\';setTimeout(()=>el.textContent=\'⧉\',1200);}).call(this)" style="background:none;border:none;cursor:pointer;color:#7a736d;font-size:14px;padding:0 2px;line-height:1" title="복사">⧉</button>'
+        +'</div>'
+        +'<code style="display:block;color:#f0ece6;padding:10px 14px;font-family:inherit;font-size:14px;line-height:1.75;white-space:pre-wrap;word-break:break-all;overflow-wrap:anywhere">'+inner+'</code>'
+        +'</div>';
+    }
+    return '<code style="background:'+codeBg+';color:#f0ece6;border-radius:4px;padding:1px 5px;font-family:inherit;font-size:13px">'+inner+'</code>';
+  });
+  return t;
+}
+
+function _renderPreview(){
+  const rt=document.getElementById('result-text');
+  const dark=isDarkBg(selectedBg);
+  rt.style.background=selectedBg;
+  rt.style.color=dark?'#f0ece6':'#1c1917';
+  const body=renderMarkup(_resultRaw,dark);
+  const deco=decoHTML(selectedEmojis);
+  rt.innerHTML = deco ? '<div style="position:relative">'+deco+'<div style="position:relative;z-index:1">'+body+'</div></div>' : body;
+}
+
+function openResult(){
+  const result=doReplace();
+  if(!result){toast('텍스트를 먼저 입력해주세요');return;}
+  _resultRaw=result;
+  _renderPreview();
+  document.getElementById('result-modal').classList.add('show');
+}
+
+function copyResult(){
+  const t=_resultRaw;
+  if(!t){toast('복사할 내용이 없어요');return;}
+  navigator.clipboard.writeText(t).then(()=>toast('복사됐어요')).catch(()=>{
+    const ta=document.createElement('textarea');
+    ta.value=t;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');ta.remove();
+    toast('복사됐어요');
+  });
+}
+
+// 초기 렌더
+renderRules();
+
+// ===== BG COLOR =====
+const BG_COLORS=[
+  {name:'흰색',color:'#ffffff'},
+  {name:'검정',color:'#1c1917'},
+  {name:'베이지',color:'#faf6f0'},
+  {name:'크림',color:'#fff9e6'},
+  {name:'연핑크',color:'#fff0f3'},
+  {name:'라벤더',color:'#f3f0ff'},
+  {name:'스카이',color:'#eef5ff'},
+  {name:'세이지',color:'#e8f5e8'},
+  {name:'버터',color:'#fdf3cf'},
+  {name:'그레이지',color:'#f1ede4'},
+  {name:'클레이',color:'#f2e2cf'},
+  {name:'옅은카키',color:'#e8e7d3'},
+  {name:'살몬',color:'#fce2d8'},
+  {name:'연두',color:'#eaf2cd'},
+  {name:'아쿠아',color:'#d4eeee'},
+  // 그라데이션
+  {name:'선셋',color:'linear-gradient(135deg,#ffe1c4,#ffd2e0)'},
+  {name:'오로라',color:'linear-gradient(135deg,#d4f3e6,#dce8ff)'},
+  {name:'라벤더드림',color:'linear-gradient(135deg,#e6dcff,#ffdcf0)'},
+  // 이모지 흩뿌린 귀여운 배경 (서로 색 안 겹치게)
+  {name:'🌸 벚꽃',color:'linear-gradient(135deg,#ffe3ee,#fff0f5)',emojis:['🌸','💕','✨','🎀','🌷']},
+  {name:'✨ 별밤',color:'linear-gradient(135deg,#ece4ff,#f4eeff)',emojis:['✨','⭐','💜','🌙','🪐']},
+  {name:'🦋 봄나비',color:'linear-gradient(135deg,#e3f6ec,#eefaf2)',emojis:['🦋','🌿','🌷','✨','🍀']},
+  {name:'☁️ 하늘',color:'linear-gradient(135deg,#e2f0ff,#f0f7ff)',emojis:['☁️','💙','✨','⭐','🌟']},
+  {name:'🍑 피치',color:'linear-gradient(135deg,#ffe8db,#fff2ec)',emojis:['🍑','🧡','✨','🌼','🐣']},
+  {name:'💗 하트',color:'linear-gradient(135deg,#ffe1ec,#ffeef4)',emojis:['💗','💕','💞','✨','💖']},
+];
+let selectedBg=BG_COLORS[0].color;
+let selectedEmojis=null;   // 이모지 배경 선택 시 이모지 목록
+// 이모지를 배경에 고정 위치로 흩뿌리는 레이어 (미리보기=저장본 동일하게 고정 좌표)
+// 이모지를 폰 기본(애플) 대신 납작한 디자인 이모지(트웸오지) 이미지로 → 기종 상관없이 같은 모양
+function tcode(e){ return [...e].map(c=>c.codePointAt(0).toString(16)).filter(c=>c!=='fe0f').join('-'); }
+function decoHTML(emojis){
+  if(!emojis||!emojis.length)return '';
+  // 화면 전체에 골고루(위/중간/아래, 좌/중/우) 지그재그로 넓게 퍼뜨림
+  // 배열 값: [top(%), left(%), size(px), rotate(deg)]
+  const P = [
+    [10, 15, 22, -12], // 상단 좌측
+    [15, 85, 20, 15],  // 상단 우측
+    [28, 50, 18, 5],   // 상단 중앙
+    [45, 18, 24, -8],  // 중단 좌측
+    [50, 82, 16, 12],  // 중단 우측
+    [65, 45, 20, -10], // 하단 중앙
+    [85, 20, 18, -5],  // 하단 좌측
+    [82, 80, 22, 8]    // 하단 우측
+  ];
+  let h='<div style="position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0">';
+  P.forEach((p,i)=>{
+    const url='https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/'+tcode(emojis[i%emojis.length])+'.png';
+    // 투명도 0.25 (연하게)
+    h+='<img crossorigin="anonymous" src="'+url+'" style="position:absolute;top:'+p[0]+'%;left:'+p[1]+'%;width:'+p[2]+'px;height:'+p[2]+'px;opacity:.25;transform:translate(-50%,-50%) rotate('+p[3]+'deg)"/>';
+  });
+  return h+'</div>';
+}
+const bgOpts=document.getElementById('bg-opts');
+BG_COLORS.forEach((b,i)=>{
+  const d=document.createElement('div');
+  d.className='bg-opt'+(i===0?' active':'');
+  d.style.background=b.color;
+  d.title=b.name;
+  if(b.emojis){ d.innerHTML='<img crossorigin="anonymous" src="https://cdn.jsdelivr.net/gh/jdecked/twemoji@15.1.0/assets/72x72/'+tcode(b.emojis[0])+'.png" style="width:15px;height:15px"/>'; d.style.display='flex'; d.style.alignItems='center'; d.style.justifyContent='center'; }
+  d.onclick=()=>{
+    selectedBg=b.color; selectedEmojis=b.emojis||null;
+    bgOpts.querySelectorAll('.bg-opt').forEach(x=>x.classList.remove('active'));
+    d.classList.add('active');
+    if(_resultRaw)_renderPreview(); // 미리보기 배경 즉시 반영
+  };
+  bgOpts.appendChild(d);
+});
+
+async function textToImage(){
+  const src = document.getElementById('src-text').value;
+  if(!src){toast('텍스트를 먼저 입력해주세요');return;}
+  const result = (typeof _resultRaw==='string'&&_resultRaw)?_resultRaw:(doReplace() || src);
+
+  if(typeof html2canvas==='undefined'){toast('이미지 변환 모듈 로딩 중… 잠시 후 다시 시도해주세요');return;}
+
+  const sysFont = `'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif`;
+  const dark = isDarkBg(selectedBg);
+  // 미리보기(result-text)와 똑같은 HTML·스타일을 가진 오프스크린 박스를 만들어 캡처.
+  // 화면에 보이는 그대로가 이미지로 나옴 (굵게·진회색·코드 박스·줄바꿈 동일)
+  const stageW = Math.min(window.innerWidth, 430);
+  const stage = document.createElement('div');
+  stage.style.cssText =
+    'position:fixed;left:-99999px;top:0;width:'+stageW+'px;box-sizing:border-box;'+
+    'padding:24px 20px;background:'+selectedBg+';color:'+(dark?'#f0ece6':'#1c1917')+';'+
+    'font-family:'+sysFont+';font-size:14px;line-height:1.4;'+
+    'letter-spacing:-0.02em;white-space:pre-wrap;word-break:break-all;overflow-wrap:anywhere';
+  const _body = renderMarkup(result,dark);
+  const _deco = decoHTML(selectedEmojis);
+  stage.innerHTML = _deco ? '<div style="position:relative">'+_deco+'<div style="position:relative;z-index:1">'+_body+'</div></div>' : _body;
+  document.body.appendChild(stage);
+
+  try{
+    await document.fonts.ready;
+    // 이모지(트웸오지) 이미지가 저장본에 확실히 들어가도록 먼저 로드 대기
+    const _imgs=[...stage.querySelectorAll('img')];
+    if(_imgs.length){ await Promise.all(_imgs.map(im=> im.complete ? Promise.resolve() : new Promise(r=>{ im.onload=r; im.onerror=r; setTimeout(r,3000); }))); }
+    const scale = Math.min(3, (window.devicePixelRatio||1)*1.5);
+    const canvas = await html2canvas(stage, {
+      backgroundColor: /gradient/i.test(selectedBg) ? null : selectedBg,
+      scale: scale,
+      useCORS: true,
+      logging: false
+    });
+    document.body.removeChild(stage);
+
+    await new Promise(res=>{
+      canvas.toBlob(async blob => {
+        const isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+        if(isIOS && navigator.share && navigator.canShare){
+          const file = new File([blob], 'cover_text.png', {type:'image/png'});
+          if(navigator.canShare({files:[file]})){
+            try{ await navigator.share({files:[file], title:'cover_text'}); return res(); }
+            catch(e){ if(e.name==='AbortError') return res(); }
+          }
+        }
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = 'cover_text_' + Date.now() + '.png';
+        link.href = url;
+        link.click();
+        toast('저장됐어요');
+        setTimeout(()=>URL.revokeObjectURL(url), 5000);
+        res();
+      }, 'image/png');
+    });
+  }catch(e){
+    if(stage.parentNode)document.body.removeChild(stage);
+    toast('이미지 저장 실패: '+e.message);
+    console.error(e);
+  }
+}
+
+let tessReady=false;
+(function loadTess(){
+  const urls=[
+    'https://cdn.jsdelivr.net/npm/tesseract.js@5.1.1/dist/tesseract.min.js',
+    'https://unpkg.com/tesseract.js@5.1.1/dist/tesseract.min.js',
+    'https://cdnjs.cloudflare.com/ajax/libs/tesseract.js/5.1.1/tesseract.min.js'
+  ];
+  let i=0;
+  function tryNext(){
+    if(i>=urls.length){toast('OCR 엔진 로드 실패');return}
+    const s=document.createElement('script');
+    s.src=urls[i];
+    s.onload=()=>{tessReady=true;document.getElementById('lib-loading').classList.remove('show')};
+    s.onerror=()=>{i++;tryNext()};
+    document.head.appendChild(s);
+  }
+  document.getElementById('lib-loading').classList.add('show');
+  tryNext();
+})();
+
+let currentStyle='black';
+let selectedEmoji='🌸';
+let origImg=null, ocrData=null, offCtx=null;
+let autoFilter=false;
+
+// 성적인 단어 자동 가림 목록 (검열 회피 표기 방지용)
+const AUTO_WORDS=['보지','자지','섹스','성기','자위','발기','사정','음경','음부','음모','질내','삽입','애무','오르가즘','오르가슴','페니스','클리토리스','정액','정자','난자','콘돔','젖꼭지','유두','자궁','음란','야동','포르노','딜도','바이브레이터','후장','항문섹스','구강성교','펠라','쿤닐링구스','조루','발정','교미','성교','성행위','성관계','자궁구','대음순','지스팟','보짓물','질구','귀두','쿠퍼액','음낭','전립선','회음부','뒷보지','애널','방광'];
+
+function toggleAuto(){
+  autoFilter=!autoFilter;
+  document.getElementById('auto-check').classList.toggle('on',autoFilter);
+  document.getElementById('cute-row').style.display=autoFilter?'flex':'none';
+  if(!autoFilter){cuteMode=false;document.getElementById('cute-check').classList.remove('on');}
+  if(ocrData) applyCensor();
+}
+
+let cuteMode=false;
+let debugMode=false;
+const APP_VER='v23.6';
+function toggleDebug(){
+  debugMode=!debugMode;
+  if(ocrData)applyCensor();
+}
+function toggleCute(){
+  cuteMode=!cuteMode;
+  document.getElementById('cute-check').classList.toggle('on',cuteMode);
+  if(ocrData) applyCensor();
+}
+
+let fuzzyMode=false;
+function toggleFuzzy(){
+  fuzzyMode=!fuzzyMode;
+  document.getElementById('fuzzy-check').classList.toggle('on',fuzzyMode);
+  if(ocrData) applyCensor();
+}
+
+// 동화풍 순화어 맵 — 무슨 행위인지는 알 정도로만 귀엽게
+const CUTE_MAP={
+  '보지':'꽃잎','자지':'꼬추','섹스':'응응','성기':'거기','자위':'혼자놀이',
+  '발기':'빳빳','사정':'슈웅','음경':'꼬추','음부':'거기','음모':'솜털',
+  '질내':'안쪽','삽입':'넣기','애무':'쓰담쓰담','오르가즘':'뿅가기','오르가슴':'뿅가기',
+  '페니스':'꼬추','클리토리스':'콩알','정액':'우유','정자':'올챙이','난자':'알',
+  '콘돔':'풍선','젖꼭지':'꼭지','유두':'꼭지','자궁':'아기집','음란':'야시시',
+  '야동':'야한거','포르노':'야한거','딜도':'장난감','바이브레이터':'장난감',
+  '후장':'뒷문','항문섹스':'뒷문놀이','구강성교':'입놀이','펠라':'입놀이',
+  '쿤닐링구스':'입놀이','조루':'빨리끝','발정':'두근두근','교미':'짝짓기',
+  '성교':'응응','성행위':'응응','성관계':'응응','자궁구':'아기집문',
+  '대음순':'꽃잎','지스팟':'마법단추','보짓물':'꿀물','질구':'입구',
+  '귀두':'버섯머리','쿠퍼액':'이슬','음낭':'주머니','전립선':'보물샘',
+  '회음부':'거기','뒷보지':'뒷문','애널':'뒷문','방광':'물주머니'
+};
+
+// 초성 추출 → 야한 단어 라벨 (예: 보지 → ㅂ❤️‍🔥ㅈ)
+const CHO=['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+function choseong(ch){
+  const c=ch.charCodeAt(0)-0xAC00;
+  if(c<0||c>11171) return ch;
+  return CHO[Math.floor(c/588)];
+}
+function autoLabel(sw){
+  if(sw.length<=1) return choseong(sw)+'❤️‍🔥';
+  return choseong(sw[0])+'❤️‍🔥'+choseong(sw[sw.length-1]);
+}
+
+function selectStyle(s,el){
+  currentStyle=s;
+  document.querySelectorAll('.style-opt').forEach(x=>x.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('emoji-section').classList.toggle('show',s==='emoji');
+  if(ocrData) applyCensor();
+}
+
+const EMOJIS=['🌸','⭐','❤️','🔥','🍀','🎵','✨','🐱','🐶','💜','🩷','🌈','🦋','🍓','🌙','🎀'];
+const ep=document.getElementById('emoji-pick');
+EMOJIS.forEach(e=>{
+  const d=document.createElement('div');
+  d.className='emoji-opt'+(e===selectedEmoji?' active':'');
+  d.textContent=e;
+  d.onclick=()=>{
+    selectedEmoji=e;
+    ep.querySelectorAll('.emoji-opt').forEach(x=>x.classList.remove('active'));
+    d.classList.add('active');
+    if(ocrData) applyCensor();
+  };
+  ep.appendChild(d);
+});
+
+let _pvHinted=false;
+function togglePvMenu(){
+  document.getElementById('pv-menu').classList.toggle('show');
+}
+function hidePvMenu(){
+  document.getElementById('pv-menu').classList.remove('show');
+}
+
+function loadImage(input){
+  const file=input.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      origImg=img; ocrData=null; offCtx=null;
+      const canvas=document.getElementById('canvas');
+      canvas.width=img.width; canvas.height=img.height;
+      canvas.getContext('2d').drawImage(img,0,0);
+      document.getElementById('preview-wrap').style.display='block';
+      document.getElementById('upload-area').style.display='none';
+      document.getElementById('controls').style.display='flex';
+      document.getElementById('dl-btn').style.display='none';
+      document.getElementById('crop-btn').style.display='';
+      document.getElementById('found').classList.remove('show');
+      hidePvMenu();
+      if(!_pvHinted){toast('사진을 누르면 그리기 · 사진 바꾸기');_pvHinted=true;}
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function getProcessedCanvas(srcImg){
+  // 글자가 작으면 확대 (OCR은 글자 높이 50~60px 부근에서 가장 정확)
+  let k=Math.min(2.5,Math.max(1,2200/srcImg.width));
+  // 너무 큰 이미지는 메모리 보호
+  if(srcImg.width*k>3000)k=Math.max(1,3000/srcImg.width);
+  const c=document.createElement('canvas');
+  c.width=Math.round(srcImg.width*k); c.height=Math.round(srcImg.height*k);
+  const ctx=c.getContext('2d');
+  ctx.imageSmoothingEnabled=true;
+  ctx.imageSmoothingQuality='high';
+  ctx.drawImage(srcImg,0,0,c.width,c.height);
+  const id=ctx.getImageData(0,0,c.width,c.height);
+  const d=id.data;
+  for(let i=0;i<d.length;i+=4){
+    const avg=(d[i]+d[i+1]+d[i+2])/3;
+    // 대비 강화: 회색 글씨는 더 진하게, 배경은 더 밝게 (회색조 유지 → 가는 획 보존, OCR 안정)
+    let v;
+    if(avg<195){ v=Math.max(0, Math.round((avg-195)*1.9 + 150)); } // 글씨: 진하게 끌어내림
+    else { v=Math.min(255, Math.round((avg-195)*1.2 + 200)); }      // 배경: 흰색으로
+    d[i]=d[i+1]=d[i+2]=v;
+  }
+  ctx.putImageData(id,0,0);
+  return {canvas:c,k};
+}
+
+// OCR 좌표를 원본 이미지 크기로 환산
+function unscaleOcr(data,k){
+  if(k===1)return;
+  const seen=new Set();
+  const fix=b=>{
+    if(!b||seen.has(b))return;seen.add(b);
+    b.x0/=k;b.x1/=k;b.y0/=k;b.y1/=k;
+  };
+  (data.words||[]).forEach(w=>{
+    fix(w.bbox);
+    (w.symbols||[]).forEach(s=>fix(s.bbox));
+  });
+  (data.symbols||[]).forEach(s=>fix(s.bbox));
+}
+
+// 워커 재사용 + 정확도 파라미터 (PSM 6: 단일 텍스트 블록 — 세로획 오인식 대폭 감소)
+// 언어별로 따로 캐시: 한글은 kor 전용이 정확, 영어 단어 검색 시에만 eng 추가 패스
+let tessWorkers={},onProg=null;
+async function getTessWorker(lang){
+  if(tessWorkers[lang])return tessWorkers[lang];
+  let w;
+  try{
+    // 더 정확한 best 모델 (한글 인식 향상). cacheMethod:'refresh'로 캐시된 옛 모델 무시하고 새로 받음.
+    w=await Tesseract.createWorker(lang,1,{
+      langPath:'https://tessdata.projectnaptha.com/4.0.0_best',
+      cacheMethod:'refresh',
+      logger:m=>{if(onProg)onProg(m);}
+    });
+  }catch(e){
+    // best 로딩 실패 시 기본 모델로 자동 복귀 (앱이 멈추지 않게)
+    w=await Tesseract.createWorker(lang,1,{
+      logger:m=>{if(onProg)onProg(m);}
+    });
+  }
+  await w.setParameters({
+    tessedit_pageseg_mode:'6',
+    preserve_interword_spaces:'1',
+    user_defined_dpi:'300'
+  });
+  tessWorkers[lang]=w;
+  return w;
+}
+
+async function doScan(){
+  const w1=document.getElementById('word1').value.trim();
+  const w2=document.getElementById('word2').value.trim();
+  if(!w1&&!w2&&!autoFilter){toast('가릴 단어를 입력하거나 자동 가리기를 켜주세요');return}
+  if(!origImg){toast('이미지를 먼저 올려주세요');return}
+  if(!tessReady){toast('OCR 엔진 로딩 중...');return}
+  const btn=document.getElementById('scan-btn');
+  btn.disabled=true; btn.textContent='스캔 중...';
+  debugMode=false; // 스캔 시작 시 진단 모드 자동으로 꺼짐 — 🔍 눌러야만 켜짐
+  const fill=document.getElementById('progress-fill');
+  const ptxt=document.getElementById('progress-text');
+  document.getElementById('progress').classList.add('show');
+  fill.style.width='0%'; ptxt.textContent='0%';
+  try{
+    const {canvas:processed,k}=getProcessedCanvas(origImg);
+    onProg=m=>{
+      if(m.progress!==undefined){
+        const p=Math.round(m.progress*100);
+        fill.style.width=p+'%';
+        ptxt.textContent=m.status==='recognizing text'?p+'%':'';
+      }
+    };
+    // 한국어 패스 (기본) — 한글은 kor 전용이 가장 정확
+    const korWorker=await getTessWorker('kor');
+    const result=await korWorker.recognize(processed);
+    unscaleOcr(result.data,k);
+    ocrData={kor:result.data, eng:null};
+    // 영어 단어가 있을 때만 eng OCR 추가 실행
+    const w1e=document.getElementById('word1').value.trim();
+    const w2e=document.getElementById('word2').value.trim();
+    if(/[a-z]/i.test(w1e+w2e)||autoFilter===false){
+      ptxt.textContent='영어 스캔 중...';
+      const engWorker=await getTessWorker('eng');
+      const engRes=await engWorker.recognize(processed);
+      unscaleOcr(engRes.data,k);
+      ocrData.eng=engRes.data;
+    }
+    fill.style.width='100%'; ptxt.textContent='100%';
+    const canvas=document.getElementById('canvas');
+    const off=document.createElement('canvas');
+    off.width=canvas.width; off.height=canvas.height;
+    offCtx=off.getContext('2d');
+    offCtx.drawImage(origImg,0,0);
+    applyCensor();
+  }catch(e){
+    toast('오류: '+e.message);
+    console.error(e);
+  }
+  btn.disabled=false; btn.textContent='스캔';
+}
+
+// ===== 한글 자모 합성 =====
+// 테서랙트 LSTM은 글자를 진짜로 분할하지 않고 타임스텝에서 박스를 역산함.
+// 그래서 세로모음(ㅣㅏㅓ…)이 'ㄹ'+'ㅜ'처럼 별도 심볼로 떨어져 나오는 일이 잦음.
+// 매칭 전에 자모 시퀀스를 음절로 합성해 "루루" indexOf가 깨지지 않게 함.
+const _CHO=[...'ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ'];
+const _JUNG=[...'ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ'];
+const _JONG=[...'ㄱㄲㄳㄴㄵㄶㄷㄹㄺㄻㄼㄽㄾㄿㅀㅁㅂㅄㅅㅆㅇㅈㅊㅋㅌㅍㅎ'];
+function composeJamoChars(chars){
+  const out=[];
+  for(let i=0;i<chars.length;i++){
+    const c=chars[i];
+    const ci=_CHO.indexOf(c.ch);
+    if(ci>=0&&i+1<chars.length){
+      const ji=_JUNG.indexOf(chars[i+1].ch);
+      if(ji>=0){
+        let ki=-1,used=2;
+        if(i+2<chars.length){
+          const k=_JONG.indexOf(chars[i+2].ch);
+          // 받침 후보 다음이 모음이면 그 자음은 다음 음절의 초성 → 받침 아님
+          if(k>=0&&!(chars[i+3]&&_JUNG.indexOf(chars[i+3].ch)>=0)){ki=k;used=3;}
+        }
+        // 합성 음절의 bbox = 구성 자모 심볼들의 합집합 (ㅇ+ㅢ→의: ㅣ까지 포함해야 오른쪽 끝이 맞음)
+        const parts=[c,chars[i+1]];
+        if(used===3)parts.push(chars[i+2]);
+        let mergedSym=c.sym;
+        const bbs=parts.map(p=>p&&p.sym&&p.sym.bbox).filter(Boolean);
+        if(bbs.length){
+          const bb={
+            x0:Math.min(...bbs.map(b=>b.x0)),
+            y0:Math.min(...bbs.map(b=>b.y0)),
+            x1:Math.max(...bbs.map(b=>b.x1)),
+            y1:Math.max(...bbs.map(b=>b.y1))
+          };
+          mergedSym=Object.assign({},c.sym,{bbox:bb});
+        }
+        out.push({ch:String.fromCharCode(0xAC00+(ci*21+ji)*28+(ki+1)),sym:mergedSym,ci:c.ci,cn:c.cn});
+        i+=used-1;continue;
+      }
+    }
+    out.push(c);
+  }
+  return out;
+}
+
+// 받침 제거: '닿'→'다', '당'→'다'. 받침만 틀린 OCR 오류 보정.
+function _noJong(ch){
+  const c=ch.charCodeAt(0)-0xAC00;
+  if(c<0||c>11171)return ch;
+  const j=c%28;
+  return j===0?ch:String.fromCharCode(0xAC00+(c-j));
+}
+
+function applyCensor(){
+  if(!origImg||!ocrData)return;
+  const w1=document.getElementById('word1').value.trim().normalize('NFC').toLowerCase();
+  const w2=document.getElementById('word2').value.trim().normalize('NFC').toLowerCase();
+  // latin: 영어/숫자로만 이루어진 단어 (길이 제한 없음) — 앞뒤 경계 체크에 사용
+  const searchWords=[w1,w2].map(s=>s.replace(/[^\p{L}\p{N}]/gu,'')).filter(Boolean).map(s=>({sw:s,auto:false,latin:/^[a-z0-9]+$/i.test(s)}));
+  if(autoFilter){
+    AUTO_WORDS.forEach(a=>{
+      const s=a.toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+      if(s&&!searchWords.some(e=>e.sw===s)) searchWords.push({sw:s,auto:true,latin:/^[a-z0-9]+$/i.test(s)});
+    });
+  }
+  // 영어 단어는 eng OCR 데이터로, 한글 단어는 kor OCR 데이터로 분리해서 처리
+  const korWords=searchWords.filter(e=>!e.latin);
+  const engWords=searchWords.filter(e=>e.latin);
+  // 단어별 counts 인덱스 유지 (searchWords 순서 기준)
+  const korData=ocrData.kor||ocrData; // 하위호환: ocrData가 구버전 flat 형태이면 그대로 사용
+  const engData=ocrData.eng||null;
+  const canvas=document.getElementById('canvas');
+  const ctx=canvas.getContext('2d');
+  ctx.drawImage(origImg,0,0);
+  if(!searchWords.length){
+    document.getElementById('found').classList.remove('show');
+    document.getElementById('dl-btn').style.display='none';
+    return;
+  }
+  const counts=searchWords.map(()=>0); // 단어별로 따로 카운트
+  const drawnRects=[]; // 이미 가린 영역 (fallback 중복 방지용)
+
+  // 모든 단어 높이의 중앙값 → 일정한 박스 높이 기준 (kor OCR 기준)
+  const allKorWords=korData.words||[];
+  const allEngWords=(engData&&engData.words)||[];
+  const allWordsForHeight=[...allKorWords,...allEngWords];
+  const heights=allWordsForHeight.map(w=>w.bbox.y1-w.bbox.y0).filter(h=>h>0).sort((a,b)=>a-b);
+  const medH=heights.length?heights[Math.floor(heights.length/2)]:20;
+  const padY=Math.round(medH*0.1);
+  const fixedH=medH+padY*2;
+
+  // fixedH 정의 후에 isCovered 선언 (fixedH가 const라 선언 전 참조 불가)
+  function isCovered(x0,x1,yc){
+    const h2=fixedH/2;
+    for(const r of drawnRects){
+      const ix=Math.max(0,Math.min(x1,r.x1)-Math.max(x0,r.x0));
+      const iy=Math.max(0,Math.min(yc+h2,r.y1)-Math.max(yc-h2,r.y0));
+      const newArea=Math.max(1,(x1-x0))*fixedH;
+      const oldArea=Math.max(1,(r.x1-r.x0))*Math.max(1,(r.y1-r.y0));
+      if(ix*iy>0.25*Math.min(newArea,oldArea))return true;
+    }
+    return false;
+  }
+
+  // ── 영어 단어 가리기: 픽셀 column 스캔으로 글자 경계 직접 측정 ──
+  // 심볼 bbox 전혀 안 씀 — OCR이 특수문자 섞어도 무관
+  function pixelColumnsForWord(bb,cy){
+    if(!offCtx)return null;
+    const cw=offCtx.canvas.width,ch=offCtx.canvas.height;
+    const sx=Math.max(0,Math.floor(bb.x0-medH*0.3));
+    const ex=Math.min(cw-1,Math.ceil(bb.x1+medH*0.3));
+    const sy=Math.max(0,Math.floor(cy-fixedH*0.55));
+    const ey=Math.min(ch-1,Math.ceil(cy+fixedH*0.55));
+    const pw=ex-sx+1, ph=ey-sy+1;
+    if(pw<2||ph<2)return null;
+    let img;
+    try{img=offCtx.getImageData(sx,sy,pw,ph).data;}catch(e){return null;}
+    const lum=p=>0.299*img[p]+0.587*img[p+1]+0.114*img[p+2];
+    // 배경 밝기 추정 (중앙값)
+    const ls=[];
+    for(let i=0;i<img.length;i+=16)ls.push(lum(i-(i%4)));
+    ls.sort((a,b)=>a-b);
+    const bg=ls[ls.length>>1];
+    // 각 열의 잉크 합산
+    const ink=new Float32Array(pw);
+    for(let yy=0;yy<ph;yy++){
+      for(let xx=0;xx<pw;xx++){
+        if(Math.abs(lum((yy*pw+xx)*4)-bg)>40)ink[xx]++;
+      }
+    }
+    return {ink,sx,ex,ph};
+  }
+
+  // 잉크 배열에서 글자 덩어리(glyph) 경계를 분리
+  // 반환: [{x0,x1}] — 이미지 좌표 기준
+  function splitGlyphs(ink,sx,ph){
+    const thr=Math.max(1,ph*0.04); // 열 잉크가 이 값 이하면 gap
+    const glyphs=[];
+    let inGlyph=false,gStart=0;
+    for(let i=0;i<ink.length;i++){
+      if(!inGlyph&&ink[i]>thr){inGlyph=true;gStart=i;}
+      else if(inGlyph&&ink[i]<=thr){
+        glyphs.push({x0:gStart+sx,x1:i-1+sx});
+        inGlyph=false;
+      }
+    }
+    if(inGlyph)glyphs.push({x0:gStart+sx,x1:ink.length-1+sx});
+    return glyphs;
+  }
+
+  function coverEngWords(){
+    if(!engWords.length)return;
+    const src=engData?(engData.words||[]):(korData.words||[]);
+    src.forEach(w=>{
+      const wtext=(w.text||'').toLowerCase().replace(/[^a-z0-9]/gi,'');
+      if(!wtext)return;
+      const bb=w.bbox;
+      const cy=Math.round((bb.y0+bb.y1)/2);
+
+      // 픽셀 column 분석으로 글자 덩어리 경계 획득
+      const pcol=pixelColumnsForWord(bb,cy);
+      const glyphs=pcol?splitGlyphs(pcol.ink,pcol.sx,pcol.ph):[];
+
+      // glyph 수가 wtext 길이와 비슷하면 글자별 경계 매핑 가능
+      // 영어는 글자가 붙어있는 경우도 있어서 완전 1:1이 안 될 수 있음
+      // → 비율 fallback과 혼합 사용
+      const unit=(bb.x1-bb.x0)/wtext.length;
+
+      engWords.forEach(en=>{
+        const si=searchWords.indexOf(en);
+        const sw=en.sw;
+        let idx=wtext.indexOf(sw);
+        while(idx>=0){
+          // 단어 경계 체크: 앞뒤에 알파벳이 붙어있으면 건너뜀
+          const before=wtext[idx-1]||'';
+          const after=wtext[idx+sw.length]||'';
+          if(/[a-z0-9]/i.test(before)||/[a-z0-9]/i.test(after)){
+            idx=wtext.indexOf(sw,idx+1);continue;
+          }
+
+          // ① 비율로 대략적인 x 범위 계산 (항상 유효한 fallback)
+          let x0=bb.x0+unit*idx;
+          let x1=bb.x0+unit*(idx+sw.length);
+
+          // ② glyph 분리가 wtext와 충분히 대응되면 글자 경계 직접 사용
+          if(glyphs.length>=wtext.length&&glyphs.length<=wtext.length*1.5){
+            // wtext의 각 글자가 glyph 하나에 대응된다고 가정
+            const ga=glyphs[Math.min(idx,glyphs.length-1)];
+            const gb=glyphs[Math.min(idx+sw.length-1,glyphs.length-1)];
+            if(ga&&gb){x0=ga.x0;x1=gb.x1;}
+          } else {
+            // ③ glyph 분리가 안 됐어도, 픽셀 스캔으로 실제 잉크 경계를 찾아 x0/x1 보정
+            if(pcol){
+              const {ink,sx}=pcol;
+              const thr=Math.max(1,pcol.ph*0.04);
+              // x0 보정: 비율 위치 근처에서 실제 잉크 시작점 탐색 (왼→오)
+              const searchL=Math.max(0,Math.round(x0-unit*0.6)-sx);
+              const searchR=Math.min(ink.length-1,Math.round(x0+unit*0.6)-sx);
+              for(let i=searchL;i<=searchR;i++){
+                if(ink[i]>thr){x0=i+sx;break;}
+              }
+              // x1 보정: 비율 위치 근처에서 실제 잉크 끝점 탐색 (오→왼)
+              const searchL2=Math.max(0,Math.round(x1-unit*0.6)-sx);
+              const searchR2=Math.min(ink.length-1,Math.round(x1+unit*0.6)-sx);
+              for(let i=searchR2;i>=searchL2;i--){
+                if(ink[i]>thr){x1=i+sx;break;}
+              }
+            }
+          }
+
+          if(!(x1>x0)){idx=wtext.indexOf(sw,idx+1);continue;}
+          if(isCovered(x0,x1,cy)){counts[si]++;idx=wtext.indexOf(sw,idx+1);continue;}
+          const by0=cy-Math.round(fixedH/2);
+          drawCensor(ctx,canvas,x0,by0,x1-x0,fixedH,null);
+          drawnRects.push({x0,x1,y0:by0,y1:by0+fixedH});
+          counts[si]++;
+          idx=wtext.indexOf(sw,idx+1);
+        }
+      });
+    });
+  }
+  coverEngWords();
+
+  // ── 한글 단어 가리기: 픽셀 자기상관 기반 정밀 매칭 ──
+  function coverKorWords(){
+    if(!korWords.length)return;
+    (korData.words||[]).forEach(w=>{
+      const rawChars=[];
+      if(w.symbols&&w.symbols.length){
+        w.symbols.forEach(s=>{
+          const t=(s.text||'').normalize('NFC').toLowerCase();
+          const cs=[...t].filter(ch=>/[\p{L}\p{N}]/u.test(ch));
+          cs.forEach((ch,ci)=>rawChars.push({ch,sym:s,ci,cn:cs.length}));
+        });
+      }else{
+        const t=(w.text||'').normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+        for(const ch of t) rawChars.push({ch,sym:null,ci:0,cn:1});
+      }
+      const chars=composeJamoChars(rawChars);
+      const txt=chars.map(c=>c.ch).join('');
+      if(!txt)return;
+      const bb=w.bbox;
+      korWords.forEach(en=>{
+        const si=searchWords.indexOf(en);
+        const sw=en.sw;
+        let idx=txt.indexOf(sw);
+        while(idx>=0){
+          const a=chars[idx], b=chars[idx+sw.length-1];
+          let x0,x1;
+          const raw=(w.text||'').normalize('NFC').trim();
+          const pureHangul=raw.length>0&&raw.length===txt.length&&/^[가-힣]+$/.test(raw);
+          if(pureHangul&&/^[가-힣]+$/.test(sw)){
+            const unit=(bb.x1-bb.x0)/txt.length;
+            x0=bb.x0+unit*idx; x1=bb.x0+unit*(idx+sw.length);
+          }else{
+            if(a.sym&&a.sym.bbox&&b.sym&&b.sym.bbox){
+              const aw=a.sym.bbox.x1-a.sym.bbox.x0, bw2=b.sym.bbox.x1-b.sym.bbox.x0;
+              x0=a.sym.bbox.x0+aw*(a.ci/a.cn);
+              x1=b.sym.bbox.x0+bw2*((b.ci+1)/b.cn);
+            }
+            if(!(x1>x0)){
+              const ww=bb.x1-bb.x0;
+              x0=bb.x0+Math.round(ww*idx/txt.length);
+              x1=bb.x0+Math.round(ww*(idx+sw.length)/txt.length);
+            }
+          }
+          // 한글 픽셀 정밀 보정
+          if(/^[가-힣]+$/.test(sw)){
+            const cyy=Math.round((bb.y0+bb.y1)/2);
+            const gh=Math.max(8,bb.y1-bb.y0);
+            let estUnit=(x1-x0)/sw.length;
+            if(!(estUnit>2)||estUnit>medH*1.4)estUnit=Math.min((bb.x1-bb.x0)/txt.length,medH);
+            estUnit=Math.max(estUnit,medH*0.55);
+            const A=measureAdvance3(x0,cyy,medH);
+            const ref=medH*0.97; const sc=(sw.length===1);
+            let unitF;
+            if(sc){unitF=A&&Math.abs(A-ref)<=ref*0.25?A:ref;}
+            else if(A&&Math.abs(A-ref)<=ref*0.3){unitF=A;}
+            else if(A){const arr=[A,estUnit,ref].sort((p,q)=>p-q);unitF=arr[1];}
+            else{unitF=Math.abs(estUnit-ref)<=medH*0.2?estUnit:ref;}
+            const ideal=sw.length*unitF; x1=x0+ideal;
+            [x0,x1]=refineXEdges(x0,x1,cyy,gh,unitF,ideal,sc);
+            if(!sc){
+              const prv=idx>0?chars[idx-1]:null;
+              if(prv&&prv.sym&&prv.sym.bbox&&prv.sym.bbox.x1<x0)
+                x0=Math.max(prv.sym.bbox.x1+1,x0-unitF*0.25);
+              const nxt=chars[idx+sw.length];
+              if(nxt&&nxt.sym&&nxt.sym.bbox&&nxt.sym.bbox.x0>x0+ideal*0.45){
+                const padR=Math.max(2,Math.round(fixedH*0.06))+1;
+                x1=Math.min(x1,nxt.sym.bbox.x0-padR);
+              }
+            }
+          }
+          const cy=Math.round((bb.y0+bb.y1)/2);
+          // ── 하드 경계: 이웃 글자 침범/삐죽 방지. OCR 단어 자신의 비율 경계와
+          //    실제 앞뒤 글자 bbox 중 더 안쪽을 절대 상/하한으로 삼는다. ──
+          const _tl=Math.max(1,txt.length);
+          const propL=bb.x0+(bb.x1-bb.x0)*idx/_tl;
+          const propR=bb.x0+(bb.x1-bb.x0)*(idx+sw.length)/_tl;
+          let xFloor=Math.max(bb.x0,propL-medH*0.12);
+          let xCeil=bb.x1;
+          const _prvC=idx>0?chars[idx-1]:null;
+          if(_prvC&&_prvC.sym&&_prvC.sym.bbox&&_prvC.sym.bbox.x1<=x1)
+            xFloor=Math.max(xFloor,_prvC.sym.bbox.x1-1);
+          // ── 오른쪽 끝: OCR이 준 '마지막 타깃 글자' 심볼 박스의 오른쪽 끝이 정확한 경계 ──
+          // 글꼴 음절 간격이 좁아 잉크 진행은 다음 글자로 새므로, OCR 박스 경계를 그대로 쓴다.
+          // 쪼개진 좁은 조각(오→오+2)만 흡수. 정상 다음 글자(의/은)는 폭이 넓어 흡수 안 됨.
+          const _xWB=x1; // 픽셀로 잰 '글자수×글자폭' 기반 오른쪽 끝(신뢰값). OCR 박스가 깨져도 이 근처로 묶음.
+          const lastC=chars[idx+sw.length-1];
+          if(lastC&&lastC.sym&&lastC.sym.bbox){
+            let xr=lastC.sym.bbox.x1;
+            const lastW=lastC.sym.bbox.x1-lastC.sym.bbox.x0;
+            const firstC=chars[idx];
+            let refW=(sw.length>=2&&firstC&&firstC.sym&&firstC.sym.bbox)?(firstC.sym.bbox.x1-firstC.sym.bbox.x0):medH*0.9;
+            if(refW<medH*0.4)refW=medH*0.9;
+            if(sw.length>=2&&lastW>refW*1.45){
+              // 마지막 글자 박스가 비정상적으로 넓음 = 다음 글자(의)와 병합됨 → 한 글자폭에서 자름
+              xr=lastC.sym.bbox.x0+refW;
+            }else if(lastW<medH*0.55){
+              // 비정상적으로 좁음 = 글자 쪼갬(오→오+2, 의→의+ㅣ) → 붙은 좁은 조각만 흡수 (한 글자 포함)
+              let k2=idx+sw.length;
+              while(k2<chars.length){
+                const c=chars[k2];
+                if(!(c&&c.sym&&c.sym.bbox))break;
+                const gp=c.sym.bbox.x0-xr, cw=c.sym.bbox.x1-c.sym.bbox.x0;
+                if(gp<medH*0.30&&cw<medH*0.55){xr=Math.max(xr,c.sym.bbox.x1);k2++;}
+                else break;
+              }
+            }
+            // sw.length===1(한 글자)면 위 보정 없이 그 글자 박스를 그대로 사용
+            if(sw.length===1)xr=extendThinTail(xr,cy,fixedH); // 한 글자(의)일 때만 붙은 ㅣ 획 포함.
+            else if(_xWB>x0) xr=Math.max(_xWB-fixedH*0.16, Math.min(xr,_xWB+fixedH*0.10)); // 여러 글자: 글자폭 기준으로 묶어 OCR 깨짐 보정(삐짐·침범 동시 방지)
+            x1=xr; // 패딩 0 → 그려진 끝 = x1 = 글자 경계(다음 글자 '의' 직전)
+            xCeil=Math.max(Math.min(bb.x1,xr),xr);
+          }else{
+            xCeil=Math.min(xCeil,propR+medH*0.12);
+          }
+          const clamp=()=>{x0=Math.max(x0,xFloor);x1=Math.min(x1,xCeil);
+            if(x1<=x0)x1=x0+Math.max(4,Math.round(medH*0.5));};
+          clamp();
+          if(isCovered(x0,x1,cy)){counts[si]++;idx=txt.indexOf(sw,idx+1);continue;}
+          const lbl=en.auto?(cuteMode?'~'+(CUTE_MAP[sw]||sw)+'~':autoLabel(sw)):null;
+          let by0=cy-Math.round(fixedH/2);
+          for(const r of drawnRects){
+            if(Math.abs((r.y0+r.y1)/2-cy)>fixedH*0.3)continue;
+            const gap=Math.max(x0,r.x0)-Math.min(x1,r.x1);
+            if(x0<=r.x1+medH*0.3&&x1>=r.x0-medH*0.3&&gap<medH*0.4){
+              x0=Math.min(x0,r.x1);x1=Math.max(x1,r.x0);by0=r.y0;
+            }
+          }
+          clamp(); // merge가 이웃 글자로 번지지 못하게 경계 재적용
+          drawCensor(ctx,canvas,x0,by0,x1-x0,fixedH,lbl);
+          drawnRects.push({x0,x1,y0:by0,y1:by0+fixedH});
+          counts[si]++; idx=txt.indexOf(sw,idx+1);
+        }
+      });
+    });
+    // 심볼 fallback (한글만)
+    const korSyms=korData.symbols||[];
+    if(korSyms.length&&korWords.length){
+      const rawSyms=[];
+      korSyms.forEach(s=>{
+        const t=(s.text||'').normalize('NFC').toLowerCase();
+        const cs=[...t].filter(ch=>/[\p{L}\p{N}]/u.test(ch));
+        cs.forEach((ch,ci)=>rawSyms.push({ch,sym:s,ci,cn:cs.length}));
+      });
+      const map=composeJamoChars(rawSyms);
+      const allText=map.map(c=>c.ch).join('');
+      korWords.forEach(en=>{
+        const si=searchWords.indexOf(en);
+        const sw=en.sw;
+        let idx=allText.indexOf(sw);
+        while(idx>=0){
+          const a=map[idx];
+          const b=map[Math.min(idx+sw.length-1,map.length-1)];
+          if(a?.sym?.bbox&&b?.sym?.bbox){
+            const aw=a.sym.bbox.x1-a.sym.bbox.x0, bw2=b.sym.bbox.x1-b.sym.bbox.x0;
+            let x0=a.sym.bbox.x0+aw*(a.ci/a.cn);
+            let x1=b.sym.bbox.x0+bw2*((b.ci+1)/b.cn);
+            const cy=Math.round((a.sym.bbox.y0+a.sym.bbox.y1)/2);
+            const cy2=Math.round((b.sym.bbox.y0+b.sym.bbox.y1)/2);
+            if(/^[가-힣]+$/.test(sw)){
+              const xEndReal=x1; // 진입 시 x1 = 마지막 심볼의 실제 오른쪽 끝(공백 포함 전체 폭 반영)
+              let estUnit=(x1-x0)/sw.length;
+              if(!(estUnit>2)||estUnit>medH*1.4)estUnit=medH;
+              estUnit=Math.max(estUnit,medH*0.55);
+              const A=measureAdvance3(x0,cy,medH);
+              const ref=medH*0.97; const sc=(sw.length===1);
+              let unitF;
+              if(sc){unitF=A&&Math.abs(A-ref)<=ref*0.25?A:ref;}
+              else if(A&&Math.abs(A-ref)<=ref*0.3){unitF=A;}
+              else if(A){const arr=[A,estUnit,ref].sort((p,q)=>p-q);unitF=arr[1];}
+              else{unitF=Math.abs(estUnit-ref)<=medH*0.2?estUnit:ref;}
+              const ideal=sw.length*unitF; x1=x0+ideal;
+              const r2=refineXEdges(x0,x1,cy,fixedH,unitF,ideal,sc);
+              x0=r2[0];x1=r2[1];
+              // 여러 글자 구절은 띄어쓰기 때문에 균일폭 추정이 짧아져 끝글자가 빠진다.
+              // 실제 마지막 심볼 끝을 하한으로 삼아 마지막 글자까지 반드시 덮음.
+              if(sw.length>=2){
+                if(xEndReal>x1)x1=xEndReal;
+                // OCR 심볼 박스는 끝 글자 모음 획(ㅏ ㅓ 등)을 살짝 잘라먹는다.
+                // 소폭 확장 — 같은 줄 다음 글자가 있으면 아래 _nb 클램프가 제한함.
+                x1+=Math.round(medH*0.14);
+              }
+            }
+            // 오른쪽 끝: OCR '마지막 타깃 글자' 심볼 박스 끝 + 좁은 조각 흡수 (메인 루프와 동일)
+            {
+              const lastM=map[idx+sw.length-1];
+              if(lastM&&lastM.sym&&lastM.sym.bbox){
+                let xr=lastM.sym.bbox.x1;
+                const lastW=lastM.sym.bbox.x1-lastM.sym.bbox.x0;
+                const firstM=map[idx];
+                let refW=(sw.length>=2&&firstM&&firstM.sym&&firstM.sym.bbox)?(firstM.sym.bbox.x1-firstM.sym.bbox.x0):medH*0.9;
+                if(refW<medH*0.4)refW=medH*0.9;
+                if(sw.length>=2&&lastW>refW*1.45){
+                  xr=lastM.sym.bbox.x0+refW;
+                }else if(lastW<medH*0.55){
+                  let k2=idx+sw.length;
+                  while(k2<map.length){
+                    const c=map[k2];
+                    if(!(c&&c.sym&&c.sym.bbox))break;
+                    const ccy=(c.sym.bbox.y0+c.sym.bbox.y1)/2;
+                    if(Math.abs(ccy-cy2)>=fixedH*0.6)break;
+                    const gp=c.sym.bbox.x0-xr, cw=c.sym.bbox.x1-c.sym.bbox.x0;
+                    if(gp<medH*0.30&&cw<medH*0.55){xr=Math.max(xr,c.sym.bbox.x1);k2++;}
+                    else break;
+                  }
+                }
+                if(sw.length===1)xr=extendThinTail(xr,cy2,fixedH); // 한 글자일 때만
+                if(xr>x0)x1=xr; // 패딩 0 → 그려진 끝 = 글자 경계
+              }
+            }
+            // 앞 글자 침범 방지(같은 줄)
+            const _pb=idx>0?map[idx-1]:null;
+            if(_pb&&_pb.sym&&_pb.sym.bbox){
+              const pcy=(_pb.sym.bbox.y0+_pb.sym.bbox.y1)/2;
+              if(Math.abs(pcy-cy)<fixedH*0.6&&_pb.sym.bbox.x1<x1-medH*0.3)
+                x0=Math.max(x0,_pb.sym.bbox.x1);
+            }
+            if(x1>x0&&Math.abs(cy-cy2)<fixedH*0.8&&!isCovered(x0,x1,cy)){
+              const lbl=en.auto?(cuteMode?'~'+(CUTE_MAP[sw]||sw)+'~':autoLabel(sw)):null;
+              let by0=cy-Math.round(fixedH/2);
+              drawCensor(ctx,canvas,x0,by0,x1-x0,fixedH,lbl);
+              drawnRects.push({x0,x1,y0:by0,y1:by0+fixedH});
+              counts[si]++;
+            }
+          }
+          idx=allText.indexOf(sw,idx+1);
+        }
+      });
+    }
+  }
+  coverKorWords();
+
+  // 받침 무시 보정 — '오타 보정' 체크박스가 켜진 경우만, 정확히 못 찾은 입력 단어를
+  // 받침을 빼고 한 번 더 찾음. 같은 줄의 OCR 박스들도 이어붙여서 박스 경계 넘는 단어도 잡음.
+  // (예: '닿는'을 OCR이 '당' / '는' 두 박스로 쪼개고 받침까지 틀려도 잡힘)
+  (function coverKorByJong(){
+    if(!fuzzyMode)return;
+    const targets=korWords.filter(en=>!en.auto&&/^[가-힣]+$/.test(en.sw)&&en.sw.length>=2&&counts[searchWords.indexOf(en)]===0);
+    if(!targets.length)return;
+    // OCR 단어들을 자모 합성 + 줄별로 묶기
+    const items=(korData.words||[]).map(w=>{
+      const rawChars=[];
+      if(w.symbols&&w.symbols.length){
+        w.symbols.forEach(s=>{
+          const t=(s.text||'').normalize('NFC').toLowerCase();
+          const cs=[...t].filter(ch=>/[\p{L}\p{N}]/u.test(ch));
+          cs.forEach((ch,ci)=>rawChars.push({ch,sym:s,ci,cn:cs.length}));
+        });
+      }else{
+        const t=(w.text||'').normalize('NFC').toLowerCase().replace(/[^\p{L}\p{N}]/gu,'');
+        for(const ch of t) rawChars.push({ch,sym:null,ci:0,cn:1});
+      }
+      const chars=composeJamoChars(rawChars);
+      return {bb:w.bbox,chars,cy:(w.bbox.y0+w.bbox.y1)/2};
+    }).filter(o=>o.chars.length);
+    if(!items.length)return;
+    const lines=[];
+    items.slice().sort((a,b)=>a.cy-b.cy).forEach(o=>{
+      let ln=null;
+      for(const L of lines){if(Math.abs(L.cy-o.cy)<fixedH*0.55){ln=L;break;}}
+      if(!ln){ln={cy:o.cy,items:[]};lines.push(ln);}
+      ln.items.push(o);
+      ln.cy=(ln.cy*(ln.items.length-1)+o.cy)/ln.items.length;
+    });
+    lines.forEach(L=>{
+      L.items.sort((a,b)=>a.bb.x0-b.bb.x0);
+      const stream=[];
+      L.items.forEach(o=>o.chars.forEach((c,iInO)=>stream.push({ch:c.ch,sym:c.sym,ci:c.ci,cn:c.cn,o,iInO,nInO:o.chars.length})));
+      const lineSkel=stream.map(s=>_noJong(s.ch)).join('');
+      targets.forEach(en=>{
+        const si=searchWords.indexOf(en);
+        if(counts[si]>0)return;
+        const skel=[...en.sw].map(_noJong).join('');
+        let idx=lineSkel.indexOf(skel);
+        while(idx>=0){
+          const aS=stream[idx],bS=stream[idx+skel.length-1];
+          let x0,x1;
+          // 시작 좌표
+          if(aS.sym&&aS.sym.bbox){const aw=aS.sym.bbox.x1-aS.sym.bbox.x0;x0=aS.sym.bbox.x0+aw*(aS.ci/aS.cn);}
+          else{const ww=aS.o.bb.x1-aS.o.bb.x0;x0=aS.o.bb.x0+ww*(aS.iInO/aS.nInO);}
+          // 끝 좌표
+          if(bS.sym&&bS.sym.bbox){const bw=bS.sym.bbox.x1-bS.sym.bbox.x0;x1=bS.sym.bbox.x0+bw*((bS.ci+1)/bS.cn);}
+          else{const ww=bS.o.bb.x1-bS.o.bb.x0;x1=bS.o.bb.x0+ww*((bS.iInO+1)/bS.nInO);}
+          const cy=Math.round((aS.o.bb.y0+aS.o.bb.y1)/2);
+          if(x1>x0&&!isCovered(x0,x1,cy)){
+            const by0=cy-Math.round(fixedH/2);
+            drawCensor(ctx,canvas,x0,by0,x1-x0,fixedH,null);
+            drawnRects.push({x0,x1,y0:by0,y1:by0+fixedH});
+            counts[si]++;
+          }
+          idx=lineSkel.indexOf(skel,idx+1);
+        }
+      });
+    });
+  })();
+
+  // 진단 모드: OCR이 인식한 단어 영역과 읽은 텍스트를 표시
+  if(debugMode){
+    ctx.save();
+    ctx.lineWidth=Math.max(1,Math.round(medH*0.06));
+    [...allKorWords,...allEngWords].forEach(w=>{
+      const b=w.bbox;
+      ctx.strokeStyle='rgba(30,100,255,0.85)';
+      ctx.strokeRect(b.x0,b.y0,b.x1-b.x0,b.y1-b.y0);
+      const t=(w.text||'').trim();
+      if(t){
+        const fs=Math.max(9,Math.round(medH*0.42));
+        ctx.font=fs+'px sans-serif';
+        ctx.fillStyle='rgba(220,30,30,0.95)';
+        ctx.fillText(t,b.x0,Math.max(fs,b.y0-2));
+      }
+    });
+    ctx.restore();
+  }
+
+  const count=counts.reduce((a,b)=>a+b,0);
+  const found=document.getElementById('found');
+  let msg=count?'<b>'+count+'곳</b> 가렸어요':'단어를 찾지 못했어요';
+  // 직접 입력한 단어 중 못 찾은 게 있으면 알려줌
+  const missed=searchWords.filter((en,i)=>!en.auto&&counts[i]===0).map(en=>en.sw);
+  if(missed.length){
+    msg+='<br/>"'+missed.join('", "')+'" 못 찾았어요 — 글씨 인식이 안 된 걸 수 있어요. 그리기로 직접 가려보세요';
+  }
+  msg+=' <span onclick="toggleDebug()" style="text-decoration:underline;cursor:pointer;opacity:.6">🔍</span><span style="opacity:.35;font-size:10px"> '+APP_VER+'</span>';
+  found.innerHTML=msg;
+  found.classList.add('show');
+  document.getElementById('dl-btn').style.display=count?'':'none';
+}
+
+// 스캔 후 단어 입력만 바꿔도 바로 재적용 (재스캔은 안 함 — 사용자가 '스캔' 버튼 다시 눌러야 함)
+['word1','word2'].forEach(id=>{
+  document.getElementById(id).addEventListener('input',()=>{
+    if(!ocrData)return;
+    applyCensor();
+  });
+});
+
+// 주변 배경색 샘플링 (박스 위·아래·좌우 바깥 픽셀)
+function sampleBg(rx,ry,rw,rh,canvas){
+  const pts=[];
+  [ry-3,ry+rh+3].forEach(yy=>{
+    if(yy<0||yy>=canvas.height)return;
+    for(let i=0;i<=8;i++){
+      const xx=Math.min(canvas.width-1,Math.max(0,Math.round(rx+rw*i/8)));
+      const p=offCtx.getImageData(xx,Math.round(yy),1,1).data;
+      pts.push([p[0],p[1],p[2]]);
+    }
+  });
+  [rx-4,rx+rw+4].forEach(xx=>{
+    if(xx<0||xx>=canvas.width)return;
+    const yy=Math.min(canvas.height-1,Math.max(0,Math.round(ry+rh/2)));
+    const p=offCtx.getImageData(Math.round(xx),yy,1,1).data;
+    pts.push([p[0],p[1],p[2]]);
+  });
+  if(!pts.length)return[250,245,230];
+  pts.sort((a,b)=>(a[0]+a[1]+a[2])-(b[0]+b[1]+b[2]));
+  return pts[Math.floor(pts.length*0.6)]; // 밝은 쪽 중앙값 → 배경
+}
+
+// 원본 글자색 샘플링 (영역 안 가장 어두운 픽셀들의 평균)
+function sampleTextColor(rx,ry,rw,rh,canvas){
+  const x=Math.max(0,Math.round(rx)),y=Math.max(0,Math.round(ry));
+  const w=Math.max(1,Math.min(Math.round(rw),canvas.width-x));
+  const h=Math.max(1,Math.min(Math.round(rh),canvas.height-y));
+  const d=offCtx.getImageData(x,y,w,h).data;
+  const px=[];
+  for(let i=0;i<d.length;i+=16){
+    px.push([d[i],d[i+1],d[i+2],d[i]+d[i+1]+d[i+2]]);
+  }
+  px.sort((a,b)=>a[3]-b[3]);
+  const n=Math.max(1,Math.floor(px.length*0.08));
+  let r=0,g=0,b=0;
+  for(let i=0;i<n;i++){r+=px[i][0];g+=px[i][1];b+=px[i][2];}
+  return[Math.round(r/n),Math.round(g/n),Math.round(b/n)];
+}
+
+// 순화어로 자연스럽게 교체: 배경색으로 넉넉히 지우고 원래 글자색으로 ~순화어~ 써넣기
+function drawCuteReplace(ctx,canvas,x,y,bw,bh,word){
+  // 가리기 박스보다 넓게 지움 — 원래 글자 끄트머리가 남지 않게
+  const pxL=Math.max(6,Math.round(bh*0.28)),pxR=Math.max(4,Math.round(bh*0.15));
+  const pyV=Math.max(4,Math.round(bh*0.22));
+  const rx=Math.max(0,x-pxL);
+  const ry=Math.max(0,y-pyV);
+  const rw=Math.min(bw+pxL+pxR,canvas.width-rx);
+  const rh=Math.min(bh+pyV*2,canvas.height-ry);
+  const bg=sampleBg(rx,ry,rw,rh,canvas);
+  ctx.fillStyle=`rgb(${bg[0]},${bg[1]},${bg[2]})`;
+  ctx.fillRect(rx,ry,rw,rh);
+  const tc=sampleTextColor(x,y,bw,bh,canvas);
+  const cute=CUTE_MAP[word]||word;
+  let t='~'+cute+'~';
+  ctx.save();
+  ctx.beginPath();ctx.rect(rx,ry,rw,rh);ctx.clip();
+  ctx.textAlign='center';
+  ctx.textBaseline='middle';
+  // 글자 크기는 원래 줄 높이(bh) 기준 → 주변 글씨와 비슷하게
+  let fs=Math.round(bh*0.8);
+  const minFs=Math.max(8,Math.round(bh*0.32));
+  ctx.font=fs+'px sans-serif';
+  while(fs>minFs&&ctx.measureText(t).width>rw-2){fs--;ctx.font=fs+'px sans-serif';}
+  if(ctx.measureText(t).width>rw-2){
+    t=cute; // 그래도 길면 물결 생략
+    while(fs>minFs&&ctx.measureText(t).width>rw-2){fs--;ctx.font=fs+'px sans-serif';}
+  }
+  ctx.fillStyle=`rgb(${tc[0]},${tc[1]},${tc[2]})`;
+  ctx.fillText(t,rx+rw/2,ry+rh/2+1);
+  ctx.restore();
+}
+
+// 라벨을 오프스크린 캔버스에 그리고 실제 픽셀 경계를 찾음 → 정확한 중앙 배치용
+const _spriteCache={};
+function labelSprite(text){
+  if(_spriteCache[text])return _spriteCache[text];
+  const fp=64;
+  const oc=document.createElement('canvas');
+  oc.width=Math.ceil(fp*(text.length+2));
+  oc.height=fp*2;
+  const c=oc.getContext('2d');
+  c.font=fp+'px sans-serif';
+  c.textBaseline='middle';
+  c.lineJoin='round';
+  c.lineWidth=Math.round(fp/6);
+  c.strokeStyle='#ffffff';
+  c.strokeText(text,fp/2,fp);
+  c.fillStyle='#1c1917';
+  c.fillText(text,fp/2,fp);
+  const W=oc.width,H=oc.height;
+  const d=c.getImageData(0,0,W,H).data;
+  let minX=W,maxX=-1,minY=H,maxY=-1;
+  for(let y=0;y<H;y++){
+    for(let x=0;x<W;x++){
+      if(d[(y*W+x)*4+3]>10){
+        if(x<minX)minX=x;if(x>maxX)maxX=x;
+        if(y<minY)minY=y;if(y>maxY)maxY=y;
+      }
+    }
+  }
+  const sp=maxX<0?null:{canvas:oc,sx:minX,sy:minY,sw:maxX-minX+1,sh:maxY-minY+1};
+  _spriteCache[text]=sp;
+  return sp;
+}
+
+// 이모지를 오프스크린 캔버스에 그리고 실제 픽셀(알파) 경계를 찾음
+// → ❤️처럼 글자 측정값(ascent/descent)이 실제 그림 모양과 안 맞는
+//   이모지도 항상 진짜 보이는 영역 기준으로 정확히 중앙 배치 가능
+const _emojiSpriteCache={};
+function emojiSprite(emoji,fp){
+  fp=fp||64;
+  const key=emoji+'@'+fp;
+  if(_emojiSpriteCache[key])return _emojiSpriteCache[key];
+  const oc=document.createElement('canvas');
+  oc.width=fp*2;oc.height=fp*2;
+  const c=oc.getContext('2d');
+  c.font=fp+'px serif';
+  c.textBaseline='middle';
+  c.textAlign='left';
+  c.fillText(emoji,fp/2,fp);
+  const W=oc.width,H=oc.height;
+  const d=c.getImageData(0,0,W,H).data;
+  let minX=W,maxX=-1,minY=H,maxY=-1;
+  for(let y=0;y<H;y++){
+    for(let x=0;x<W;x++){
+      if(d[(y*W+x)*4+3]>10){
+        if(x<minX)minX=x;if(x>maxX)maxX=x;
+        if(y<minY)minY=y;if(y>maxY)maxY=y;
+      }
+    }
+  }
+  const sp=maxX<0?null:{canvas:oc,sx:minX,sy:minY,sw:maxX-minX+1,sh:maxY-minY+1};
+  _emojiSpriteCache[key]=sp;
+  return sp;
+}
+
+// 잉크 패턴의 반복 주기(자기상관)로 글자 간격을 픽셀에서 직접 측정
+// OCR 좌표가 엉망이어도 영향받지 않는 진짜 간격
+function measureAdvance(x0,cy,h){
+  if(!offCtx)return null;
+  const cw=offCtx.canvas.width,ch=offCtx.canvas.height;
+  const sx=Math.max(0,Math.floor(x0-h*0.3));
+  const ex=Math.min(cw-1,Math.ceil(x0+h*7));
+  const sy=Math.max(0,Math.floor(cy-h*0.45)),ey=Math.min(ch-1,Math.ceil(cy+h*0.45));
+  const w=ex-sx+1,hh=ey-sy+1;
+  if(w<h*2.2||hh<4)return null;
+  let img;
+  try{img=offCtx.getImageData(sx,sy,w,hh).data;}catch(e){return null;}
+  const lum=p=>0.299*img[p]+0.587*img[p+1]+0.114*img[p+2];
+  const ls=[];
+  for(let i=0;i<img.length;i+=20)ls.push(lum(i-(i%4)));
+  ls.sort((a,b)=>a-b);
+  const bg=ls[ls.length>>1];
+  const prof=new Float32Array(w);
+  for(let yy=0;yy<hh;yy++){
+    for(let xx=0;xx<w;xx++){
+      if(Math.abs(lum((yy*w+xx)*4)-bg)>50)prof[xx]++;
+    }
+  }
+  let mean=0;for(let i=0;i<w;i++)mean+=prof[i];mean/=w;
+  for(let i=0;i<w;i++)prof[i]-=mean;
+  // 한글 간격은 글자높이의 0.72~1.18배 — 그 밖(띄어쓰기 왜곡·하위 주기)은 제외
+  const lo=Math.max(4,Math.floor(h*0.72)),hi=Math.min(w-2,Math.ceil(h*1.18));
+  if(hi<=lo)return null;
+  const V=new Float32Array(hi+1);
+  let vmax=-Infinity;
+  for(let lag=lo;lag<=hi;lag++){
+    let s=0,n=0;
+    for(let i=0;i+lag<w;i++){s+=prof[i]*prof[i+lag];n++;}
+    V[lag]=n>0?s/n:-Infinity;
+    if(V[lag]>vmax)vmax=V[lag];
+  }
+  if(!(vmax>0))return null;
+  // 가장 강한 피크가 아니라 '충분히 강한(85%+) 피크 중 가장 작은 것' = 기본 주기
+  for(let lag=lo;lag<=hi;lag++){
+    if(V[lag]>=vmax*0.85
+       &&(lag===lo||V[lag]>=V[lag-1])
+       &&(lag===hi||V[lag]>=V[lag+1])){
+      return lag;
+    }
+  }
+  return null;
+}
+
+// 세 위치에서 재서 중앙값 — 한 곳이 빗나가도 안전
+function measureAdvance3(x0,cy,h){
+  const vals=[];
+  [0,Math.round(h*2),Math.round(h*4)].forEach(off=>{
+    const r=measureAdvance(x0+off,cy,h);
+    if(r)vals.push(r);
+  });
+  if(!vals.length)return null;
+  vals.sort((a,b)=>a-b);
+  return vals[vals.length>>1];
+}
+
+// 실제 픽셀을 보고 글자 사이 빈틈에 박스 양끝을 스냅 → 폰트 무관 정확한 경계
+// ideal = 글자수×글자폭. 끝 경계는 "박스 폭이 ideal에 가장 가까워지는 틈"을 골라
+// 글자 내부 틈(ㅣ 앞 빈공간 등)에 잘못 붙는 걸 방지
+function refineXEdges(x0,x1,cy,h,unit,ideal,singleChar){
+  if(!offCtx)return[x0,x1];
+  const cw=offCtx.canvas.width,ch=offCtx.canvas.height;
+  const pad=unit*0.6;
+  const sx=Math.max(0,Math.floor(x0-pad)),ex=Math.min(cw-1,Math.ceil(x1+pad));
+  const sy=Math.max(0,Math.floor(cy-h*0.45)),ey=Math.min(ch-1,Math.ceil(cy+h*0.45));
+  const w=ex-sx+1,hh=ey-sy+1;
+  if(w<6||hh<4)return[x0,x1];
+  let img;
+  try{img=offCtx.getImageData(sx,sy,w,hh).data;}catch(e){return[x0,x1];}
+  const lum=p=>0.299*img[p]+0.587*img[p+1]+0.114*img[p+2];
+  const ls=[];
+  for(let i=0;i<img.length;i+=20)ls.push(lum(i-(i%4)));
+  ls.sort((a,b)=>a-b);
+  const bg=ls[Math.floor(ls.length/2)];
+  const ink=new Array(w).fill(0);
+  for(let yy=0;yy<hh;yy++){
+    for(let xx=0;xx<w;xx++){
+      if(Math.abs(lum((yy*w+xx)*4)-bg)>50)ink[xx]++;
+    }
+  }
+  const gapThr=Math.max(1,Math.round(hh*0.03));
+  // 빈틈(run)들의 시작/끝/중앙 좌표 수집
+  const gaps=[];let runS=null;
+  for(let xx=0;xx<w;xx++){
+    if(ink[xx]<=gapThr){if(runS===null)runS=xx;}
+    else if(runS!==null){gaps.push({s:runS+sx,e:xx-1+sx,c:(runS+xx-1)/2+sx});runS=null;}
+  }
+  if(runS!==null)gaps.push({s:runS+sx,e:w-1+sx,c:(runS+w-1)/2+sx});
+  if(!gaps.length)return[x0,x0+ideal];
+  // 시작 경계: 왼쪽 gap의 오른쪽 끝으로 정렬. 단, x0보다 오른쪽으로는 이동 안 함
+  // (이동했다가 ㄸ ㅃ 같은 굵은 자음이 박스 밖으로 빠져나오는 것 방지)
+  let nx0=x0,d0=unit*0.4;
+  gaps.forEach(g=>{
+    if(g.e>x0)return; // 오른쪽 gap 무시 — 박스를 줄이지 않음
+    const d=x0-g.e;
+    if(d<d0){d0=d;nx0=g.e;}
+  });
+  // 1글자 검색: 끝 경계는 글자 내부 틈(자음↔모음 사이)에 절대 스냅하지 않음.
+  // 시작점 + 글자높이폭으로 고정해 ㄱ+ㅏ 한 글자를 통째로 덮음
+  if(singleChar){
+    return [nx0, nx0+ideal*1.05]; // 모음 획(ㅏ ㅓ 등)이 살짝 삐져나오는 것 방지
+  }
+  // 끝 경계: target보다 오른쪽 gap으로만 스냅 (마지막 글자가 잘리는 거 방지)
+  const target=nx0+ideal;
+  const minGapW=Math.max(2,Math.round(unit*0.06));
+  let nx1=target+unit*0.03,dBest=unit*0.16;
+  gaps.forEach(g=>{
+    if(g.e-g.s+1<minGapW)return;
+    if(g.c<target)return; // 왼쪽 gap 무시 — 박스를 줄이지 않음
+    const d=g.c-target;
+    if(d<dBest){dBest=d;nx1=Math.max(g.c,g.e-2);}
+  });
+  if(nx1-nx0>unit*0.6)return[nx0,nx1];
+  return[x0,x1];
+}
+
+// 깨끗한 원본(offCtx)에서 [xFrom,xTo) 구간 중 글자 잉크가 있는 '가장 오른쪽' 열을 찾는다.
+// 타깃 글자의 실제 끝을 알아내, 뒤 글자와 무관하게 일정한 박스 폭을 만들기 위함.
+function lastInkColRight(xFrom,xTo,cy,h){
+  if(!offCtx)return null;
+  const cw=offCtx.canvas.width,chh=offCtx.canvas.height;
+  const sx=Math.max(0,Math.floor(xFrom)),ex=Math.min(cw-1,Math.ceil(xTo));
+  if(ex-sx<2)return null;
+  const sy=Math.max(0,Math.round(cy-h*0.45)),ey=Math.min(chh-1,Math.round(cy+h*0.45));
+  const W=ex-sx+1,H=ey-sy+1;
+  if(H<4)return null;
+  let img;try{img=offCtx.getImageData(sx,sy,W,H).data;}catch(e){return null;}
+  const lum=p=>0.299*img[p]+0.587*img[p+1]+0.114*img[p+2];
+  // 배경 밝기 추정(중앙값)
+  const samp=[];for(let i=0;i<img.length;i+=40)samp.push(lum(i-(i%4)));
+  samp.sort((a,b)=>a-b);const bg=samp[Math.floor(samp.length/2)];
+  const need=Math.max(1,Math.round(H*0.06));
+  let last=-1;
+  for(let xx=0;xx<W;xx++){
+    let cnt=0;
+    for(let yy=0;yy<H;yy++){if(Math.abs(lum((yy*W+xx)*4)-bg)>50)cnt++;}
+    if(cnt>=need)last=xx;
+  }
+  return last<0?null:sx+last;
+}
+
+// 마지막 타깃 글자의 '예상 중심'(anchorX)에서 오른쪽으로 진행하며 그 음절의 잉크 끝을 찾는다.
+// 글자 안 작은 틈(자음·모음 사이)은 잇고, 음절 사이 큰 틈에서 멈춘다.
+// OCR 심볼 박스의 넓이/위치 부정확이나 글자 쪼갬(오→오+2)에 영향받지 않음.
+function rightInkOfSyllableAt(anchorX,cy,h){
+  if(!offCtx)return null;
+  const cw=offCtx.canvas.width,chh=offCtx.canvas.height;
+  const sx=Math.max(0,Math.round(anchorX-h*0.85)),ex=Math.min(cw-1,Math.round(anchorX+h*0.75));
+  if(ex-sx<3)return null;
+  const sy=Math.max(0,Math.round(cy-h*0.45)),ey=Math.min(chh-1,Math.round(cy+h*0.45));
+  const W=ex-sx+1,H=ey-sy+1;if(H<4)return null;
+  let img;try{img=offCtx.getImageData(sx,sy,W,H).data;}catch(e){return null;}
+  const lum=p=>0.299*img[p]+0.587*img[p+1]+0.114*img[p+2];
+  const samp=[];for(let i=0;i<img.length;i+=40)samp.push(lum(i-(i%4)));
+  samp.sort((a,b)=>a-b);const bg=samp[Math.floor(samp.length/2)];
+  const need=Math.max(1,Math.round(H*0.06));
+  const ink=new Array(W);
+  for(let xx=0;xx<W;xx++){let c=0;for(let yy=0;yy<H;yy++){if(Math.abs(lum((yy*W+xx)*4)-bg)>50)c++;}ink[xx]=c>=need?1:0;}
+  const gapW=Math.max(3,Math.round(h*0.13)); // 음절 사이로 인정할 틈(글자 안 틈보다 크게)
+  let p=Math.round(anchorX)-sx;p=Math.max(0,Math.min(W-1,p));
+  if(!ink[p]){ // 빈칸이면 가장 가까운 잉크로 이동
+    let found=-1;
+    for(let d=1;d<Math.round(h*0.45);d++){
+      if(p-d>=0&&ink[p-d]){found=p-d;break;}
+      if(p+d<W&&ink[p+d]){found=p+d;break;}
+    }
+    if(found<0)return null;p=found;
+  }
+  let gap=0,last=p;
+  for(let xx=p;xx<W;xx++){
+    if(ink[xx]){last=xx;gap=0;}
+    else{gap++;if(gap>=gapW)break;}
+  }
+  return sx+last;
+}
+
+// xr에서 오른쪽으로 '글자에 붙은 얇은 세로획'(예: 의의 ㅣ)만 픽셀로 따라가 포함한다.
+// OCR이 ㅣ를 심볼로 안 잡아도 동작. 폭이 넓은 '다음 글자'는 포함하지 않아 침범 방지.
+function extendThinTail(xr,cy,h){
+  if(!offCtx)return xr;
+  const cw=offCtx.canvas.width,chh=offCtx.canvas.height;
+  const sx=Math.max(0,Math.round(xr-2)),ex=Math.min(cw-1,Math.round(xr+h*0.5));
+  if(ex-sx<3)return xr;
+  const sy=Math.max(0,Math.round(cy-h*0.45)),ey=Math.min(chh-1,Math.round(cy+h*0.45));
+  const W=ex-sx+1,H=ey-sy+1;if(H<4)return xr;
+  let img;try{img=offCtx.getImageData(sx,sy,W,H).data;}catch(e){return xr;}
+  const lum=p=>0.299*img[p]+0.587*img[p+1]+0.114*img[p+2];
+  const samp=[];for(let i=0;i<img.length;i+=40)samp.push(lum(i-(i%4)));
+  samp.sort((a,b)=>a-b);const bg=samp[Math.floor(samp.length/2)];
+  const need=Math.max(1,Math.round(H*0.06));
+  const ink=new Array(W);
+  for(let xx=0;xx<W;xx++){let c=0;for(let yy=0;yy<H;yy++){if(Math.abs(lum((yy*W+xx)*4)-bg)>50)c++;}ink[xx]=c>=need?1:0;}
+  const maxGap=Math.max(2,Math.round(h*0.13));   // 글자에 붙었다고 볼 최대 틈
+  const thinMax=Math.max(3,Math.round(h*0.17));  // '얇은 획'으로 볼 최대 폭(ㅣ). 이보다 넓으면 다음 글자
+  let pos=Math.round(xr)-sx;if(pos<0)pos=0;
+  let result=xr;
+  while(pos<W){
+    let g=0;while(pos<W&&!ink[pos]){g++;pos++;}
+    if(pos>=W||g>maxGap)break;
+    let rs=pos;while(pos<W&&ink[pos])pos++;
+    if(pos-rs<=thinMax)result=sx+pos-1; // 얇은 획 → 포함하고 계속
+    else break;                         // 넓은 글자 → 중단(침범 방지)
+  }
+  return Math.max(xr,result);
+}
+
+// 여러 글자 단어용: OCR 박스가 글자보다 짧게 끝났을 때, 남은 글자 잉크(두꺼운 획 포함)를
+// 오른쪽으로 따라가 덮되, 진짜 빈 칸(다음 글자 '의/를' 앞)이나 한계(maxExt)에서 멈춤.
+function extendToGlyphEnd(xr,cy,h,maxExt){
+  if(!offCtx)return xr;
+  const cw=offCtx.canvas.width,chh=offCtx.canvas.height;
+  const sx=Math.max(0,Math.round(xr-2)),ex=Math.min(cw-1,Math.round(xr+maxExt+4));
+  if(ex-sx<3)return xr;
+  const sy=Math.max(0,Math.round(cy-h*0.45)),ey=Math.min(chh-1,Math.round(cy+h*0.45));
+  const W=ex-sx+1,H=ey-sy+1;if(H<4)return xr;
+  let img;try{img=offCtx.getImageData(sx,sy,W,H).data;}catch(e){return xr;}
+  const lum=p=>0.299*img[p]+0.587*img[p+1]+0.114*img[p+2];
+  const samp=[];for(let i=0;i<img.length;i+=40)samp.push(lum(i-(i%4)));
+  samp.sort((a,b)=>a-b);const bg=samp[Math.floor(samp.length/2)];
+  const need=Math.max(1,Math.round(H*0.06));
+  const ink=new Array(W);
+  for(let xx=0;xx<W;xx++){let c=0;for(let yy=0;yy<H;yy++){if(Math.abs(lum((yy*W+xx)*4)-bg)>50)c++;}ink[xx]=c>=need?1:0;}
+  const maxGap=Math.max(2,Math.round(h*0.08)); // 글자 안 작은 끊김만 잇고, 글자 사이 간격에선 멈춤(의 보호)
+  const limit=Math.round(xr)+maxExt;
+  let pos=Math.round(xr)-sx;if(pos<0)pos=0;
+  let result=xr;
+  while(pos<W){
+    let g=0;while(pos<W&&!ink[pos]){g++;pos++;}
+    if(pos>=W||g>maxGap)break;          // 진짜 빈칸 → 멈춤(다음 글자 침범 방지)
+    while(pos<W&&ink[pos])pos++;          // 잉크 런 포함(얇든 두껍든)
+    const abs=sx+pos-1;
+    if(abs>=limit){result=limit;break;}   // 한계 도달 → 멈춤
+    result=abs;
+  }
+  return Math.max(xr,Math.min(result,limit));
+}
+
+function drawCensor(ctx,canvas,x,y,bw,bh,label){
+  const pxL=0,pxR=0; // 바깥 패딩 없음 — 그려진 박스가 정확히 [x, x+bw]. 앞/뒤 글자 침범 방지.
+  const rx=Math.max(0,x-pxL);
+  const ry=Math.max(0,y);
+  const rw=Math.min(bw+pxL+pxR,canvas.width-rx);
+  const rh=Math.min(bh,canvas.height-ry);
+  if(currentStyle==='black'){
+    ctx.fillStyle='#1c1917';
+    ctx.fillRect(rx,ry,rw,rh);
+  }else if(currentStyle==='white'){
+    ctx.fillStyle='#ffffff';
+    ctx.fillRect(rx,ry,rw,rh);
+  }else if(currentStyle==='mosaic'){
+    drawMosaic(ctx,canvas,rx,ry,rw,rh);
+  }else if(currentStyle==='emoji'){
+    drawMosaic(ctx,canvas,rx,ry,rw,rh);
+    // 폰트 측정값(ascent/descent) 대신, 실제로 그려진 픽셀 영역(emojiSprite)을
+    // 기준으로 중앙 배치 — ❤️처럼 측정값과 실제 모양이 안 맞는 이모지도 정확함
+    const fontSize=Math.min(84,Math.max(20,Math.round(rh*1.05)));
+    const sp=emojiSprite(selectedEmoji,fontSize);
+    if(sp){
+      ctx.save();
+      ctx.beginPath();ctx.rect(rx,ry,rw,rh);ctx.clip();
+      const maxW=rw*0.98,maxH=rh*0.98;
+      const scale=Math.min(maxW/sp.sw,maxH/sp.sh,1.4);
+      const dw=sp.sw*scale,dh=sp.sh*scale;
+      ctx.drawImage(sp.canvas,sp.sx,sp.sy,sp.sw,sp.sh,rx+(rw-dw)/2,ry+(rh-dh)/2,dw,dh);
+      ctx.restore();
+    }
+  }
+  // 라벨 (ㅂ❤️‍🔥ㅈ 또는 ~콩알~) — 픽셀 경계 기준 정중앙 배치
+  if(label){
+    // 안 들어가면 축약: ~콩알~ → 콩알 / ㅂ❤️‍🔥ㅈ → ㅂ❤️‍🔥 → ❤️‍🔥
+    const cands=label.startsWith('~')
+      ?[label,label.replace(/~/g,'')]
+      :[label,label.replace(/[\u3131-\u3163]$/,''),'❤️‍🔥'];
+    const maxW=rw-Math.max(4,Math.round(rw*0.08));
+    const maxH=Math.round(rh*0.72);
+    for(let i=0;i<cands.length;i++){
+      const sp=labelSprite(cands[i]);
+      if(!sp)continue;
+      const scale=Math.min(maxW/sp.sw,maxH/sp.sh);
+      const dw=sp.sw*scale,dh=sp.sh*scale;
+      // 너무 작아지면 더 짧은 라벨로 (마지막 후보는 무조건 그림)
+      if(dh<rh*0.32&&i<cands.length-1)continue;
+      ctx.drawImage(sp.canvas,sp.sx,sp.sy,sp.sw,sp.sh,rx+(rw-dw)/2,ry+(rh-dh)/2,dw,dh);
+      break;
+    }
+  }
+}
+
+function drawMosaic(ctx,canvas,x,y,w,h){
+  const block=Math.max(4,Math.round(h/4));
+  for(let bx=x;bx<x+w;bx+=block){
+    for(let by=y;by<y+h;by+=block){
+      const sx=Math.min(bx+Math.floor(block/2),canvas.width-1);
+      const sy=Math.min(by+Math.floor(block/2),canvas.height-1);
+      const p=offCtx.getImageData(sx,sy,1,1).data;
+      ctx.fillStyle=`rgb(${p[0]},${p[1]},${p[2]})`;
+      ctx.fillRect(bx,by,Math.min(block,x+w-bx),Math.min(block,y+h-by));
+    }
+  }
+}
+
+async function doDownload(){
+  const canvas=document.getElementById('canvas');
+  const isIOS=/iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  canvas.toBlob(async blob=>{
+    // iOS: Web Share API로 공유 → 사진에 저장 가능
+    if(isIOS && navigator.share && navigator.canShare){
+      const file=new File([blob],'cover.png',{type:'image/png'});
+      if(navigator.canShare({files:[file]})){
+        try{
+          await navigator.share({files:[file],title:'cover'});
+          return;
+        }catch(e){
+          if(e.name==='AbortError') return; // 사용자가 취소
+        }
+      }
+    }
+    // 일반 다운로드 (Android / PC)
+    const url=URL.createObjectURL(blob);
+    const link=document.createElement('a');
+    link.download='cover_'+Date.now()+'.png';
+    link.href=url;
+    link.click();
+    toast('저장됐어요');
+    setTimeout(()=>URL.revokeObjectURL(url),5000);
+  },'image/png');
+}
+
+function doReset(){
+  origImg=null;ocrData=null;offCtx=null;
+  document.getElementById('preview-wrap').style.display='none';
+  document.getElementById('upload-area').style.display='';
+  document.getElementById('controls').style.display='none';
+  document.getElementById('file-input').value='';
+  document.getElementById('word1').value='';
+  document.getElementById('word2').value='';
+  autoFilter=false;
+  document.getElementById('auto-check').classList.remove('on');
+  cuteMode=false;
+  document.getElementById('cute-check').classList.remove('on');
+  document.getElementById('cute-row').style.display='none';
+  fuzzyMode=false;
+  document.getElementById('fuzzy-check').classList.remove('on');
+  document.getElementById('found').classList.remove('show');
+  document.getElementById('progress').classList.remove('show');
+  document.getElementById('dl-btn').style.display='none';
+  document.getElementById('crop-btn').style.display='none';
+  hidePvMenu();
+}
+
+function toast(m){
+  const t=document.getElementById('toast');
+  t.textContent=m;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// ===== DRAW (손 모자이크) =====
+let _dz={s:1,tx:0,ty:0};      // 확대/이동 상태
+let _mosaicPat=null;           // 모자이크 패턴
+let _drawUndo=[];              // 되돌리기 스택
+let _paintLast=null,_pinch0=null,_drawBound=false;
+
+function openDraw(){
+  if(!origImg)return;
+  const main=document.getElementById('canvas');
+  const dc=document.getElementById('draw-canvas');
+  dc.width=main.width; dc.height=main.height;
+  dc.getContext('2d').drawImage(main,0,0);
+  _buildMosaicPattern(dc);
+  _drawUndo=[];
+  _dz={s:1,tx:0,ty:0};_applyDz();
+  document.getElementById('draw-modal').classList.add('show');
+  if(!_drawBound){_bindDraw();_drawBound=true;}
+}
+
+function closeDraw(){document.getElementById('draw-modal').classList.remove('show');}
+
+function _buildMosaicPattern(dc){
+  // 현재 화면을 통째로 픽셀화한 버전 → 붓 패턴으로 사용
+  const block=Math.max(8,Math.round(Math.max(dc.width,dc.height)/90));
+  const small=document.createElement('canvas');
+  small.width=Math.max(1,Math.round(dc.width/block));
+  small.height=Math.max(1,Math.round(dc.height/block));
+  const sctx=small.getContext('2d');
+  sctx.drawImage(dc,0,0,small.width,small.height);
+  const big=document.createElement('canvas');
+  big.width=dc.width; big.height=dc.height;
+  const bctx=big.getContext('2d');
+  bctx.imageSmoothingEnabled=false;
+  bctx.drawImage(small,0,0,big.width,big.height);
+  _mosaicPat=dc.getContext('2d').createPattern(big,'no-repeat');
+}
+
+function _applyDz(){
+  document.getElementById('draw-pan').style.transform=
+    `translate(${_dz.tx}px,${_dz.ty}px) scale(${_dz.s})`;
+}
+
+function _brushPx(){
+  const dc=document.getElementById('draw-canvas');
+  const v=+document.getElementById('brush-size').value;
+  return Math.max(10,Math.round(dc.width*0.011*v)); // 캔버스 픽셀 기준 반지름
+}
+
+function _canvasPt(t){
+  const dc=document.getElementById('draw-canvas');
+  const r=dc.getBoundingClientRect(); // transform 반영된 화면 좌표
+  return{
+    x:(t.clientX-r.left)/r.width*dc.width,
+    y:(t.clientY-r.top)/r.height*dc.height
+  };
+}
+
+function _pushUndo(){
+  const dc=document.getElementById('draw-canvas');
+  const snap=document.createElement('canvas');
+  snap.width=dc.width;snap.height=dc.height;
+  snap.getContext('2d').drawImage(dc,0,0);
+  _drawUndo.push(snap);
+  if(_drawUndo.length>6)_drawUndo.shift();
+}
+
+function undoDraw(){
+  if(!_drawUndo.length){toast('되돌릴 게 없어요');return}
+  const dc=document.getElementById('draw-canvas');
+  const snap=_drawUndo.pop();
+  const c=dc.getContext('2d');
+  c.clearRect(0,0,dc.width,dc.height);
+  c.drawImage(snap,0,0);
+}
+
+function _paintSeg(p0,p1){
+  const dc=document.getElementById('draw-canvas');
+  const c=dc.getContext('2d');
+  c.save();
+  c.strokeStyle=_mosaicPat;
+  c.lineWidth=_brushPx()*2;
+  c.lineCap='round';c.lineJoin='round';
+  c.beginPath();
+  c.moveTo(p0.x,p0.y);
+  c.lineTo(p1.x+0.01,p1.y+0.01); // 같은 점이어도 점 찍히게
+  c.stroke();
+  c.restore();
+}
+
+function _bindDraw(){
+  const wrap=document.getElementById('draw-wrap');
+  wrap.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    if(e.touches.length===1){
+      _pinch0=null;
+      _pushUndo();
+      _paintLast=_canvasPt(e.touches[0]);
+      _paintSeg(_paintLast,_paintLast);
+    }else if(e.touches.length===2){
+      // 핀치 시작 — 방금 시작된 칠하기는 되돌림
+      if(_paintLast&&_drawUndo.length){undoDraw();}
+      _paintLast=null;
+      const [a,b]=e.touches;
+      _pinch0={
+        d:Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY),
+        mx:(a.clientX+b.clientX)/2, my:(a.clientY+b.clientY)/2,
+        s:_dz.s, tx:_dz.tx, ty:_dz.ty
+      };
+    }
+  },{passive:false});
+  wrap.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(e.touches.length===1&&_paintLast){
+      const p=_canvasPt(e.touches[0]);
+      _paintSeg(_paintLast,p);
+      _paintLast=p;
+    }else if(e.touches.length===2&&_pinch0){
+      const [a,b]=e.touches;
+      const d=Math.hypot(a.clientX-b.clientX,a.clientY-b.clientY);
+      const mx=(a.clientX+b.clientX)/2, my=(a.clientY+b.clientY)/2;
+      const ns=Math.min(8,Math.max(1,_pinch0.s*d/_pinch0.d));
+      const wr=document.getElementById('draw-wrap').getBoundingClientRect();
+      const ox=_pinch0.mx-wr.left, oy=_pinch0.my-wr.top;
+      _dz.s=ns;
+      _dz.tx=(mx-wr.left)-(ox-_pinch0.tx)*(ns/_pinch0.s);
+      _dz.ty=(my-wr.top)-(oy-_pinch0.ty)*(ns/_pinch0.s);
+      _applyDz();
+    }
+  },{passive:false});
+  wrap.addEventListener('touchend',e=>{
+    if(e.touches.length===0){_paintLast=null;_pinch0=null;}
+  });
+  // PC 마우스 지원
+  wrap.addEventListener('mousedown',e=>{
+    e.preventDefault();
+    _pushUndo();
+    _paintLast=_canvasPt(e);
+    _paintSeg(_paintLast,_paintLast);
+  });
+  window.addEventListener('mousemove',e=>{
+    if(!_paintLast||!document.getElementById('draw-modal').classList.contains('show'))return;
+    const p=_canvasPt(e);
+    _paintSeg(_paintLast,p);
+    _paintLast=p;
+  });
+  window.addEventListener('mouseup',()=>{_paintLast=null;});
+  // PC 휠 줌
+  wrap.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const wr=wrap.getBoundingClientRect();
+    const ns=Math.min(8,Math.max(1,_dz.s*(e.deltaY<0?1.15:0.87)));
+    const ox=e.clientX-wr.left, oy=e.clientY-wr.top;
+    _dz.tx=ox-(ox-_dz.tx)*(ns/_dz.s);
+    _dz.ty=oy-(oy-_dz.ty)*(ns/_dz.s);
+    _dz.s=ns;
+    _applyDz();
+  },{passive:false});
+}
+
+function applyDraw(){
+  const dc=document.getElementById('draw-canvas');
+  const main=document.getElementById('canvas');
+  main.getContext('2d').drawImage(dc,0,0);
+  // 편집 결과를 원본으로 굳힘 → 이후 스타일 변경/재가림에도 유지
+  const ni=new Image();
+  ni.onload=()=>{
+    origImg=ni;
+    if(offCtx)offCtx.drawImage(ni,0,0);
+    document.getElementById('dl-btn').style.display='';
+    closeDraw();toast('적용됐어요');
+  };
+  ni.src=dc.toDataURL();
+}
+
+// ===== CROP =====
+let _cr={x:0,y:0,w:0,h:0},_dt=null,_ds=null,_rs=null;
+
+function openCrop(){
+  if(!origImg)return;
+  // origImg를 dataURL로 변환해서 img 태그에 세팅
+  const tmp=document.createElement('canvas');
+  tmp.width=origImg.width;tmp.height=origImg.height;
+  tmp.getContext('2d').drawImage(origImg,0,0);
+  const ci=document.getElementById('crop-img');
+  ci.src=tmp.toDataURL();
+  document.getElementById('crop-modal').classList.add('show');
+  // img 로드 완료 후 sel 초기화
+  ci.onload=()=>{
+    const r=ci.getBoundingClientRect();
+    _cr={x:0,y:0,w:r.width,h:r.height};
+    _renderSel();
+    _bindCrop();
+  };
+}
+
+function closeCrop(){document.getElementById('crop-modal').classList.remove('show');}
+
+function _renderSel(){
+  const s=document.getElementById('crop-sel');
+  s.style.left=_cr.x+'px';s.style.top=_cr.y+'px';
+  s.style.width=_cr.w+'px';s.style.height=_cr.h+'px';
+}
+
+function _bindCrop(){
+  const wrap=document.getElementById('crop-wrap');
+  const nw=wrap.cloneNode(true);wrap.parentNode.replaceChild(nw,wrap);
+  const ci=nw.querySelector('img');
+  function gp(e){const r=ci.getBoundingClientRect();const t=e.touches?e.touches[0]:e;return{x:t.clientX-r.left,y:t.clientY-r.top};}
+  function dn(e){
+    const c=e.target.dataset&&e.target.dataset.c;
+    const onSel=e.target.closest&&e.target.closest('#crop-sel');
+    if(!c&&!onSel)return;
+    _ds=gp(e);_rs={..._cr};_dt=c?'h-'+c:'move';
+    e.preventDefault();
+  }
+  function mv(e){
+    if(!_dt)return;
+    const p=gp(e),dx=p.x-_ds.x,dy=p.y-_ds.y;
+    const r=ci.getBoundingClientRect();
+    const W=r.width,H=r.height,MIN=20;
+    let {x,y,w,h}=_rs;
+    if(_dt==='move'){x=Math.max(0,Math.min(W-w,x+dx));y=Math.max(0,Math.min(H-h,y+dy));}
+    else{
+      const c=_dt.slice(2);
+      if(c==='tl'){x=Math.min(x+w-MIN,x+dx);y=Math.min(y+h-MIN,y+dy);w=_rs.x+_rs.w-x;h=_rs.y+_rs.h-y;}
+      else if(c==='tr'){w=Math.max(MIN,w+dx);y=Math.min(y+h-MIN,y+dy);h=_rs.y+_rs.h-y;}
+      else if(c==='bl'){x=Math.min(x+w-MIN,x+dx);w=_rs.x+_rs.w-x;h=Math.max(MIN,h+dy);}
+      else if(c==='br'){w=Math.max(MIN,w+dx);h=Math.max(MIN,h+dy);}
+      x=Math.max(0,x);y=Math.max(0,y);w=Math.min(W-x,w);h=Math.min(H-y,h);
+    }
+    _cr={x,y,w,h};_renderSel();e.preventDefault();
+  }
+  function up(){_dt=null;}
+  nw.addEventListener('mousedown',dn);
+  nw.addEventListener('touchstart',dn,{passive:false});
+  window.addEventListener('mousemove',mv);
+  window.addEventListener('touchmove',mv,{passive:false});
+  window.addEventListener('mouseup',up);
+  window.addEventListener('touchend',up);
+}
+
+function applyCrop(){
+  const ci=document.getElementById('crop-img');
+  const r=ci.getBoundingClientRect();
+  const scaleX=origImg.width/r.width;
+  const scaleY=origImg.height/r.height;
+  const rx=Math.round(_cr.x*scaleX),ry=Math.round(_cr.y*scaleY);
+  const rw=Math.round(_cr.w*scaleX),rh=Math.round(_cr.h*scaleY);
+  const tmp=document.createElement('canvas');
+  tmp.width=rw;tmp.height=rh;
+  tmp.getContext('2d').drawImage(origImg,rx,ry,rw,rh,0,0,rw,rh);
+  const ni=new Image();
+  ni.onload=()=>{
+    origImg=ni;ocrData=null;offCtx=null;
+    const canvas=document.getElementById('canvas');
+    canvas.width=ni.width;canvas.height=ni.height;
+    canvas.getContext('2d').drawImage(ni,0,0);
+    document.getElementById('found').classList.remove('show');
+    document.getElementById('dl-btn').style.display='none';
+    document.getElementById('progress').classList.remove('show');
+    closeCrop();toast('잘랐어요!');
+  };
+  ni.src=tmp.toDataURL();
+}
 </script>
 </body>
 </html>
